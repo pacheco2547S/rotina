@@ -69,7 +69,7 @@ label{display:block;font-size:.86rem;color:var(--muted);margin:10px 0 4px}
 .inline{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:.95rem;color:var(--text)}
 .inline input{width:24px;min-height:24px;height:24px;accent-color:var(--accent)}
 nav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom));width:min(488px,calc(100% - 24px));background:rgba(20,26,23,.94);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:24px;display:flex;padding:7px;z-index:5}
-nav button{flex:1;background:transparent;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px;font-size:.7rem;font-weight:600;padding:4px 0;border-radius:16px}
+nav button{flex:1;min-width:0;background:transparent;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px;font-size:.64rem;font-weight:600;padding:4px 0;border-radius:16px}
 nav button span{font-size:1.3rem;line-height:1}
 nav button.act{color:var(--accent);background:var(--accent-soft)}
 .sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;z-index:10;align-items:flex-end;justify-content:center}
@@ -114,6 +114,9 @@ nav button.act{color:var(--accent);background:var(--accent-soft)}
 .legend{display:flex;gap:12px;flex-wrap:wrap;font-size:.78rem;color:var(--muted);margin-top:6px}
 .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;vertical-align:-1px}
 a{color:var(--accent)}
+.chatbox{display:flex;flex-direction:column;gap:8px}
+.bub{background:var(--card);border:1px solid var(--line);border-radius:18px 18px 18px 6px;padding:12px 14px;max-width:94%;font-size:.93rem}
+.bub.eu{align-self:flex-end;background:var(--accent-soft);color:var(--accent);border-color:rgba(46,213,115,.3);border-radius:18px 18px 6px 18px;font-weight:600}
 </style>
 </head>
 <body>
@@ -121,6 +124,7 @@ a{color:var(--accent)}
 <nav id="nav">
   <button data-tab="hoje"><span>☀️</span>Hoje</button>
   <button data-tab="desafios"><span>🏆</span>Desafios</button>
+  <button data-tab="coach"><span>🤖</span>Coach</button>
   <button data-tab="habitos"><span>🌱</span>Hábitos</button>
   <button data-tab="tarefas" data-also="agenda"><span>✅</span>Tarefas</button>
   <button data-tab="evolucao"><span>📈</span>Evolução</button>
@@ -649,7 +653,7 @@ function chFull(c){
   var areas = Object.keys(st.area).map(function(a){ var v = st.area[a], p = v.t ? Math.round(v.f/v.t*100) : 0;
     return '<div class="abar"><span>'+AREAS[a].ico+' '+AREAS[a].nome+'</span><div class="bar"><i style="width:'+p+'%"></i></div><span>'+p+'%</span></div>'; }).join('');
   return '<div class="card"><div class="row">'+ring(dayN(c)/c.days, dayN(c), 'de '+c.days)+'<div class="grow"><div class="title">'+esc(c.ico)+' '+esc(c.nome)+'</div>'+
-    '<div class="meta">Começou '+fmtDate(c.start)+' · '+st.ok+(st.ok===1?' dia cumprido':' dias cumpridos')+' · 🔥 '+chStreak(c)+'</div>'+
+    '<div class="meta">Começou '+fmtDate(c.start)+' · '+(st.ok===0?'nenhum dia cumprido ainda':st.ok===1?'1 dia cumprido':st.ok+' dias cumpridos')+' · 🔥 '+chStreak(c)+'</div>'+
     '<div class="meta">Regra: '+(c.rule==="recomecar"?'falhou um dia, recomeça do zero':'falhou um dia, só quebra a sequência')+(c.restarts?' · recomeços: '+c.restarts:'')+'</div></div></div>'+
     cal+'<h2 style="margin:14px 0 4px">Por área</h2>'+areas+
     '<div class="actions"><button data-act="chRule" data-c="'+c.id+'">Mudar regra</button><button class="danger" data-act="chQuit" data-c="'+c.id+'">Encerrar</button></div></div>';
@@ -667,6 +671,7 @@ function viewHoje(){
   var ci = S.checkins[t];
   h += ci ? '<div class="card"><div class="row"><div class="grow"><div class="title">Check-in de hoje ✔</div><div class="meta">⚡ energia '+ci.energia+' · 🙂 humor '+ci.humor+' · 😴 '+ci.sono+'h · 🧍 postura '+ci.postura+'</div></div><button class="ghost icon" data-act="checkin" aria-label="Editar check-in">✎</button></div></div>'
           : '<button class="full primary" data-act="checkin" style="margin-bottom:10px">📝 Fazer check-in do dia (30 s)</button>';
+  h += coachCardHoje();
   h += dicaCard(AREA_KEYS[dayOfYear() % AREA_KEYS.length]);
   var at = ativos();
   h += '<h2>Desafios · '+at.length+'/'+MAX_ATIVOS+'</h2>' + (at.length ? at.map(chToday).join('') :
@@ -774,7 +779,7 @@ function viewEvolucao(){
   h += '<h2>Histórico de desafios</h2>' + (hist.length ? hist.map(function(c){
     var r = c.result || {ok:0,pct:0};
     return '<div class="card"><div class="row">'+ring(r.pct/100, r.pct+'%', '', 56)+'<div class="grow"><div class="title">'+esc(c.ico)+' '+esc(c.nome)+'</div><div class="meta">'+
-      (c.status==="concluido"?'🏆 Concluído':'Encerrado')+' em '+fmtDate(c.ended)+' · '+r.ok+' de '+c.days+' dias cumpridos'+(c.restarts?' · '+c.restarts+' recomeço(s)':'')+'</div></div></div></div>';
+      (c.status==="concluido"?'🏆 Concluído':'Encerrado')+' em '+fmtDate(c.ended)+' · '+(r.ok===0?'nenhum dia cumprido':r.ok+' de '+c.days+(r.ok===1?' dia cumprido':' dias cumpridos'))+(c.restarts?' · '+c.restarts+' recomeço(s)':'')+'</div></div></div></div>';
   }).join('') : '<div class="empty">Os desafios terminados aparecem aqui.</div>');
   return h;
 }
@@ -782,6 +787,7 @@ function viewAjustes(){
   return hdr('Ajustes') +
     '<div class="card"><div class="title">🌙 Virada do dia</div><p class="meta">Como você trabalha de madrugada, o que marcar antes desse horário conta pro dia anterior. Padrão: 6h (fim do turno).</p>'+
     '<select id="virada">'+[0,4,5,6,7,8,9,10,12].map(function(v){return '<option value="'+v+'"'+(v===virada()?' selected':'')+'>'+(v===0?'Meia-noite (normal)':v+'h')+'</option>';}).join('')+'</select></div>' +
+    '<div class="card"><div class="title">🏖️ Dias de folga</div><p class="meta">O coach compara folga x dias de trabalho. Marque o dia em que o turno da noite NÃO acontece.</p><div class="chips" style="margin:0">'+DIAS.map(function(d,i){return '<button class="chip'+((S.cfg.folgas||[]).indexOf(i)>=0?' sel':'')+'" data-act="folga" data-n="'+i+'">'+d+'</button>';}).join('')+'</div></div>' +
     '<div class="card"><div class="title">💰 App de finanças</div><p class="meta">Saldos, gastos e cofrinho ficam no app de finanças.</p><a href="'+FIN_URL+'" target="_blank" rel="noopener"><button class="full">Abrir app de finanças ↗</button></a></div>' +
     '<div class="card"><div class="title">💾 Backup</div><p class="meta">Os dados ficam salvos só neste navegador. Se limpar o histórico ou trocar de celular, eles se perdem. Exporte um backup de vez em quando (ex.: toda semana) e guarde o arquivo.</p>' +
     '<div class="actions"><button class="primary" data-act="export">Exportar backup</button><button data-act="import">Importar backup</button></div></div>' +
@@ -793,12 +799,317 @@ function viewAjustes(){
 
 function render(){
   evalChallenges();
-  var v = {hoje:viewHoje, desafios:viewDesafios, habitos:viewHabitos, tarefas:viewTarefas, agenda:viewAgenda, evolucao:viewEvolucao, ajustes:viewAjustes}[tab] || viewHoje;
+  var v = {hoje:viewHoje, desafios:viewDesafios, habitos:viewHabitos, tarefas:viewTarefas, agenda:viewAgenda, evolucao:viewEvolucao, coach:viewCoach, ajustes:viewAjustes}[tab] || viewHoje;
   app.innerHTML = v();
   Array.prototype.forEach.call(document.querySelectorAll("nav button"), function(b){ b.classList.toggle("act", b.dataset.tab===tab || b.dataset.also===tab); });
   var vi = document.getElementById("virada");
   if(vi) vi.onchange = function(){ S.cfg.virada = +vi.value; save(); toast("Virada do dia: "+(S.cfg.virada?S.cfg.virada+"h":"meia-noite")); render(); };
 }
+/* ================== COACH: análise por regras (sem internet, sem IA externa) ================== */
+var coachN = 14, chat = [];
+var DSEM = ["domingo","segunda","terça","quarta","quinta","sexta","sábado"];
+function pct(f,t){ return t ? Math.round(f/t*100) : null; }
+function veredito(p){ return p == null ? "sem dados" : p >= 80 ? "mandando bem" : p >= 50 ? "quase lá" : "precisa de ajuste"; }
+function vIco(p){ return p == null ? "⚪" : p >= 80 ? "🟢" : p >= 50 ? "🟡" : "🔴"; }
+function habitArea(h){
+  var n = norm(h.id+" "+h.name);
+  if(/med|respir|ler\b|leitura|diario/.test(n)) return "mente";
+  if(/fac|estud|curso|canal|video/.test(n)) return "carreira";
+  if(/tai|camin|exerc|along|treino|agua|sono|corr/.test(n)) return "corpo";
+  if(/ora|igreja|grat/.test(n)) return "proposito";
+  if(/casa|louca|limp|arrum/.test(n)) return "casa";
+  if(/esposa|filha|famil/.test(n)) return "relacoes";
+  if(/dinheir|gasto|cofr/.test(n)) return "dinheiro";
+  return "mente";
+}
+function norm(s){ return String(s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,""); }
+/* Uma "instância" = uma tarefa que valia num dia. Só conta dias já fechados (até ontem). */
+function instancias(N, comHoje){
+  var t = ymd(), fim = comHoje ? t : addDays(t,-1), ini = addDays(t, -N + (comHoje?1:0)), out = [];
+  S.challenges.forEach(function(c){
+    var ate = c.status==="ativo" ? fim : (c.ended && c.ended < fim ? c.ended : fim);
+    for(var d = c.start > ini ? c.start : ini; d <= ate; d = addDays(d,1)){
+      var n = dayN(c,d); if(n < 1 || n > c.days) continue;
+      var ids = doneIds(c,d);
+      tasksFor(c,n).forEach(function(x){ out.push({k:c.id+":"+x.id, label:x.t, a:x.a, d:d, done:ids.indexOf(x.id)>=0, cid:c.id, cnome:c.nome, q:x.q||"", tipo:"desafio"}); });
+    }
+  });
+  S.habits.forEach(function(h){
+    var first = Object.keys(S.logs).filter(function(d){ return S.logs[d][h.id]; }).sort()[0]; if(!first) return;
+    for(var d = first > ini ? first : ini; d <= fim; d = addDays(d,1))
+      out.push({k:"h:"+h.id, label:(h.icon?h.icon+" ":"")+h.name+" (hábito)", a:habitArea(h), d:d, done:status(d,h)===2, tipo:"habito"});
+  });
+  return out;
+}
+function agrupa(list, fn){ var g = {}; list.forEach(function(x){ var k = fn(x); var o = g[k] || (g[k] = {f:0,t:0,items:[]}); o.t++; if(x.done) o.f++; o.items.push(x); }); return g; }
+function taxa(list){ var f = 0; list.forEach(function(x){ if(x.done) f++; }); return pct(f, list.length); }
+function porDia(list){ var g = agrupa(list, function(x){return x.d;}), m = {}; for(var d in g) m[d] = g[d].f/g[d].t*100; return m; }
+function media(a){ return a.length ? a.reduce(function(s,x){return s+x;},0)/a.length : null; }
+function n1(x){ return x == null ? "–" : (Math.round(x*10)/10).toString().replace(".",","); }
+function isFolga(d){ return (S.cfg.folgas||[]).indexOf(parse(d).getDay()) >= 0; }
+
+/* Quando fazer, considerando acordar ~15h30 e turno 22h–6h */
+function noTurnoDificil(label){ return /tai chi|caminh|filha|esposa|famil|refei|banho|louca|arruma|cantinho|quarto|dormir|programa|roupa|acordar/.test(norm(label)); }
+function quandoAgora(label){
+  var h = new Date().getHours();
+  if(h >= 6 && h < 14) return "Agora é hora de dormir. Faça logo depois de acordar (~15h30).";
+  if(h >= 14 && h < 17) return "Agora: logo depois de acordar é sua melhor janela (até ~17h).";
+  if(h >= 17 && h < 21) return "Antes de sair pro turno (até ~21h).";
+  if(h >= 21 && h < 22) return "Nos minutos antes do turno ou no primeiro intervalo.";
+  return noTurnoDificil(label) ? "Essa é difícil de fazer no turno. Se não der, foque nas outras." : "No intervalo do turno, até as 6h (virada do dia).";
+}
+function encolher(label){
+  var m = label.match(/(\d+)(?:\s*[–-]\s*\d+)?\s*(min|páginas|paginas)/);
+  if(m){ var v = Math.max(2, Math.round(+m[1]/2)); return label.replace(m[0], v+" "+m[2]); }
+  if(/2 L|2L/.test(label)) return label.replace(/~?2 L/, "1 L");
+  return "Versão mínima: só começar (2 min) e parar se quiser";
+}
+
+/* --------- Sugestões priorizadas --------- */
+function sugestoes(){
+  var out = [], N = 14, L = instancias(N), t = ymd();
+  // 1) Sequência em risco hoje
+  ativos().forEach(function(c){
+    var n = dayN(c), ts = tasksFor(c,n), ids = doneIds(c,t), falt = ts.filter(function(x){return ids.indexOf(x.id)<0;});
+    var precisa = Math.ceil(ts.length*META_DIA) - (ts.length - falt.length), sk = chStreak(c);
+    if(precisa > 0 && ts.length){
+      var faceis = falt.slice().sort(function(a,b){ return noTurnoDificil(a.t) - noTurnoDificil(b.t); }).slice(0, precisa);
+      out.push({pri: sk >= 2 ? 95 : 70, ico:"🔥", titulo: sk >= 2 ? "Sequência de "+sk+" dias em risco hoje: "+c.nome : "Ainda dá pra cumprir hoje: "+c.nome,
+        oque:"Faltam "+precisa+" tarefa(s) pra fechar o dia "+n+": "+faceis.map(function(x){return "\""+x.t+"\"";}).join(", ")+".",
+        quando: quandoAgora(faceis[0] ? faceis[0].t : ""), como:"Comece pela mais rápida. Uma tarefa feita puxa a próxima."});
+    }
+  });
+  // 2) Desafio pesado (<50% depois de 5 dias) ou fácil demais (>90%)
+  ativos().forEach(function(c){
+    var n = dayN(c); if(n <= 5) return;
+    var lc = L.filter(function(x){return x.cid===c.id;}), p = taxa(lc); if(p == null) return;
+    var g = agrupa(lc, function(x){return x.k;}), ks = Object.keys(g).sort(function(a,b){ return g[a].f/g[a].t - g[b].f/g[b].t; });
+    var leve = c.tasks.some(function(x){ return x.pausada && n - x.pausada < 7; });
+    if(p < 50 && !leve){
+      var piores = ks.slice(0, Math.max(1, Math.min(2, ks.length-2))).map(function(k){return g[k].items[0].label;});
+      out.push({pri:90, ico:"🪶", titulo:c.nome+" está pesado demais ("+p+"%)", oque:"Fazer uma versão leve por enquanto: pausar "+piores.map(function(x){return "\""+x+"\"";}).join(" e ")+".",
+        quando:"A partir de hoje. Daqui a 1 semana, se passar de 80%, volte com elas.", como:"Menos tarefas bem feitas valem mais que muitas pela metade. Constância primeiro, volume depois.",
+        acao:{act:"coachLight", c:c.id, label:"Aplicar versão leve"}});
+    } else if(p > 90){
+      var usadas = {}; c.tasks.forEach(function(x){ usadas[x.a] = 1; });
+      var nova = catalog().filter(function(x){ return !c.tasks.some(function(y){ return norm(y.t).indexOf(norm(x.t).slice(0,18))===0; }); })
+        .sort(function(a,b){ return (usadas[a.a]?1:0) - (usadas[b.a]?1:0); })[0];
+      if(nova) out.push({pri:60, ico:"🚀", titulo:c.nome+" está fácil pra você ("+p+"%)", oque:"Subir de nível: acrescentar \""+nova.t+"\" ("+AREAS[nova.a].nome+").",
+        quando:"A partir de hoje.", como:"Coloque logo depois de uma tarefa que você já faz sempre (empilhamento de hábitos).",
+        acao:{act:"coachUp", c:c.id, t:nova.t, a:nova.a, label:"Subir de nível"}});
+    }
+  });
+  // 3) Tarefa mais esquecida
+  var pesados = out.filter(function(s){return s.ico==="🪶";}).map(function(s){return s.acao.c;});
+  var g = agrupa(L, function(x){return x.k;}), ks = Object.keys(g).filter(function(k){return g[k].t >= 4;});
+  // âncora pro empilhamento: de preferência um hábito firme; senão uma tarefa firme com horário claro
+  var firmes = ks.filter(function(k){ return g[k].f/g[k].t >= 0.7; }), it0 = function(k){ return g[k].items[0]; };
+  var melhor = firmes.filter(function(k){ return it0(k).tipo==="habito"; }).sort(function(a,b){ return g[b].f/g[b].t - g[a].f/g[a].t; })[0] ||
+    firmes.filter(function(k){ return /acord|depois de|antes d|dormir|jantar/.test(norm(it0(k).q)); }).sort(function(a,b){ return g[b].f/g[b].t - g[a].f/g[a].t; })[0];
+  ks = ks.filter(function(k){ return pesados.indexOf(it0(k).cid) < 0; });
+  ks.filter(function(k){ return g[k].f/g[k].t < 0.6; }).sort(function(a,b){ return g[a].f/g[a].t - g[b].f/g[b].t; }).slice(0,2).forEach(function(k, i){
+    var it = g[k].items[0], p = pct(g[k].f, g[k].t), ancora = melhor && melhor !== k ? g[melhor].items[0].label.replace(/ \(hábito\)$/,"").replace(/^[^A-Za-zÀ-ú]+/,"") : null;
+    var turno = /turno|intervalo|madrugada|2h|1h|4h/.test(norm(it.q));
+    out.push({pri: 80 - i*10, ico:"🎯", titulo:"\""+it.label+"\" só sai "+p+"% das vezes",
+      oque: "Diminuir a tarefa: \""+encolher(it.label)+"\".",
+      quando: turno ? "Mude o horário: tente logo depois de acordar, quando você tem mais energia." : (it.q ? "Hoje está marcada pra \""+it.q+"\". Se esse horário não funciona, escolha outro fixo." : "Escolha um horário fixo."),
+      como: ancora ? "Empilhe numa coisa que você já faz sempre: logo depois de \""+ancora+"\", faça \""+encolher(it.label).replace(/^Versão mínima: /,"")+"\"." : "Deixe pronto o que precisa (livro, tênis, app aberto) pra começar sem pensar."});
+  });
+  // 4) Sono x desempenho
+  var cor = correlSono(L);
+  if(cor && cor.diff >= 15) out.push({pri:75, ico:"😴", titulo:"Sono curto derruba seu dia", oque:"Nos dias com menos de 6h de sono sua taxa cai "+cor.diff+" pontos ("+cor.baixo+"% contra "+cor.alto+"%).",
+    quando:"Hoje, ao chegar do turno (~6h30).", como:"Óculos escuros na volta, celular longe da cama, quarto bem escuro. Meta: 7h."});
+  // 5) Energia / humor caindo
+  var tr = tendencia("energia"), th = tendencia("humor");
+  if((tr && (tr.ult <= 2.5 || tr.queda >= 0.8)) || (th && (th.ult <= 2.5 || th.queda >= 0.8))){
+    var qual = tr && (tr.ult <= 2.5 || tr.queda >= 0.8) ? "energia" : "humor", x = qual==="energia"?tr:th;
+    out.push({pri:72, ico:"🌤️", titulo:"Seu "+(qual==="energia"?"nível de energia":"humor")+" está baixo", oque:"Média dos últimos dias: "+n1(x.ult)+" de 5"+(x.queda>=0.8?" (caiu "+n1(x.queda)+" ponto)":"")+". Vale pegar mais leve.",
+      quando:"Logo depois de acordar, entre 15h30 e 17h.", como:"10–15 min de caminhada no sol e água. Não acrescente tarefas novas esta semana. Descansar também é progresso."});
+  }
+  // 6) Dia da semana fraco
+  var ds = padraoSemana(instancias(30));
+  if(ds && ds.diff >= 25) out.push({pri:55, ico:"📅", titulo: ds.folga ? "Nas folgas você cai "+ds.diff+" pontos" : "Sua "+ds.pior+" é o dia mais difícil", oque: ds.folga ? "Folga: "+ds.pf+"% · dias de trabalho: "+ds.pt+"%." : "Na "+ds.pior+" você faz "+ds.pp+"%, e na "+ds.melhor+" faz "+ds.pm+"%.",
+    quando: ds.folga ? "No começo do dia de folga." : "Na véspera, antes do turno.", como:"Deixe um plano mínimo pra esse dia: as 2 tarefas mais importantes, num horário fixo."});
+  // 7) Sem check-in
+  if(!S.checkins[t]) out.push({pri:30, ico:"📝", titulo:"Faça o check-in de hoje", oque:"Energia, humor, sono e postura em 30 segundos.", quando:"Agora.", como:"Quanto mais check-ins, mais certeiras ficam as dicas do coach.", acao:{act:"checkin", label:"Fazer check-in"}});
+  if(!ativos().length) out.push({pri:50, ico:"🏁", titulo:"Comece um desafio curto", oque:"Reset 10 dias ou 15 dias Dinheiro na Mão.", quando:"Hoje, logo depois de acordar.", como:"Desafios curtos e fáceis criam a confiança pros maiores.", acao:{act:"go", tab:"desafios", label:"Ver desafios"}});
+  return out.sort(function(a,b){return b.pri-a.pri;}).slice(0,5);
+}
+function correlSono(L){
+  var pd = porDia(L), bx = [], al = [];
+  Object.keys(pd).forEach(function(d){ var c = S.checkins[d]; if(!c || !c.sono) return; (c.sono < 6 ? bx : al).push(pd[d]); });
+  if(bx.length < 2 || al.length < 2) return null;
+  var b = Math.round(media(bx)), a = Math.round(media(al)); return {baixo:b, alto:a, diff:a-b, nb:bx.length, na:al.length};
+}
+function correlNota(L, campo){
+  var pd = porDia(L), bx = [], al = [];
+  Object.keys(pd).forEach(function(d){ var c = S.checkins[d]; if(!c || !c[campo]) return; if(c[campo] <= 2) bx.push(pd[d]); else if(c[campo] >= 4) al.push(pd[d]); });
+  if(bx.length < 2 || al.length < 2) return null;
+  return {baixo:Math.round(media(bx)), alto:Math.round(media(al))};
+}
+function tendencia(campo){ // média últimos 5 dias x 5 anteriores
+  var t = ymd(), u = [], a = [];
+  for(var i=0;i<10;i++){ var c = S.checkins[addDays(t,-i)]; if(c && c[campo]) (i<5?u:a).push(+c[campo]); }
+  if(u.length < 3) return null;
+  var mu = media(u), ma = a.length >= 3 ? media(a) : mu; return {ult:mu, ant:ma, queda:ma-mu};
+}
+function padraoSemana(L){
+  if((S.cfg.folgas||[]).length){
+    var f = L.filter(function(x){return isFolga(x.d);}), w = L.filter(function(x){return !isFolga(x.d);});
+    if(f.length >= 6 && w.length >= 6){ var pf = taxa(f), pt = taxa(w); if(pt - pf >= 0) return {folga:true, pf:pf, pt:pt, diff:pt-pf}; }
+  }
+  var g = agrupa(L, function(x){ return parse(x.d).getDay(); }), ks = Object.keys(g).filter(function(k){ return g[k].t >= 4; });
+  if(ks.length < 4) return null;
+  ks.sort(function(a,b){ return g[a].f/g[a].t - g[b].f/g[b].t; });
+  var pi = ks[0], me = ks[ks.length-1], pp = pct(g[pi].f,g[pi].t), pm = pct(g[me].f,g[me].t);
+  return {pior:DSEM[pi], melhor:DSEM[me], pp:pp, pm:pm, diff:pm-pp};
+}
+
+/* --------- Respostas rápidas --------- */
+function respPorQueCaio(){
+  var L = instancias(14), p = taxa(L), r = [];
+  if(p == null) return "Ainda não tenho dados suficientes. Use os desafios e o check-in por alguns dias e me pergunte de novo.";
+  r.push("Nos últimos 14 dias você cumpriu "+p+"% ("+veredito(p)+").");
+  var g = agrupa(L, function(x){return x.k;}), ks = Object.keys(g).filter(function(k){return g[k].t>=3;}).sort(function(a,b){return g[a].f/g[a].t - g[b].f/g[b].t;});
+  if(ks.length) r.push("O que mais cai: "+ks.slice(0,3).map(function(k){return "\""+g[k].items[0].label+"\" ("+pct(g[k].f,g[k].t)+"%)";}).join(", ")+".");
+  var cs = correlSono(L); if(cs) r.push("Sono: com menos de 6h você faz "+cs.baixo+"%, e com 6h ou mais faz "+cs.alto+"%.");
+  var ce = correlNota(L,"energia"); if(ce) r.push("Energia: nos dias de energia baixa (1–2) você faz "+ce.baixo+"%, e nos de energia alta (4–5) faz "+ce.alto+"%.");
+  var ds = padraoSemana(instancias(30)); if(ds && ds.diff >= 15) r.push(ds.folga ? "Folga x trabalho: "+ds.pf+"% x "+ds.pt+"%." : "Pior dia: "+ds.pior+" ("+ds.pp+"%). Melhor: "+ds.melhor+" ("+ds.pm+"%).");
+  var turno = L.filter(function(x){return /turno|intervalo/.test(norm(x.q));}), casa = L.filter(function(x){return x.q && !/turno|intervalo/.test(norm(x.q));});
+  if(turno.length >= 5 && casa.length >= 5){ var a = taxa(turno), b = taxa(casa); if(Math.abs(a-b) >= 15) r.push("Tarefas do turno: "+a+"% · tarefas de casa: "+b+"%. "+(a<b?"No turno rende menos: leve pro horário depois de acordar o que puder.":"Em casa rende menos: o intervalo do turno está funcionando, aproveite mais."));}
+  r.push("O mais importante: escolha UMA dessas e ajuste esta semana. Não tudo de uma vez.");
+  return r.join("\n\n");
+}
+function respHoje(){
+  var t = ymd(), r = [], itens = [];
+  ativos().forEach(function(c){ var ids = doneIds(c,t); tasksFor(c,dayN(c)).forEach(function(x){ if(ids.indexOf(x.id)<0) itens.push({t:x.t, q:x.q, c:c.nome}); }); });
+  S.habits.forEach(function(h){ if(status(t,h)!==2) itens.push({t:h.name+(h.goal?" ("+h.goal+" min)":""), q:"", c:"hábito"}); });
+  if(!itens.length) return "Hoje está tudo feito! 🎉 Descanse, curta a família e durma bem depois do turno.";
+  var h = new Date().getHours(), ordem = function(x){ var q = norm(x.q); if(/acord|15h|16h|levant|cafe/.test(q)) return 1; if(/17h|faculdade|antes da|jantar|antes do turno|antes de sair/.test(q)) return 2; if(/turno|intervalo|22h|1h|2h|4h/.test(q)) return 3; if(/chegar|dormir|6h|7h/.test(q)) return 4; return 2.5; };
+  itens.sort(function(a,b){return ordem(a)-ordem(b);});
+  r.push("Faltam "+itens.length+" coisas hoje. Na ordem do seu dia:");
+  r.push(itens.slice(0,8).map(function(x){ return "• "+x.t+(x.q?" ("+x.q+")":"")+" · "+x.c; }).join("\n"));
+  if(itens.length > 8) r.push("… e mais "+(itens.length-8)+".");
+  r.push(quandoAgora(itens[0].t));
+  if(!S.checkins[t]) r.push("E faça o check-in de hoje (30 s).");
+  return r.join("\n\n");
+}
+function respSono(){
+  var t = ymd(), s = []; for(var i=0;i<14;i++){ var c = S.checkins[addDays(t,-i)]; if(c && c.sono) s.push(+c.sono); }
+  var r = [];
+  if(s.length) r.push("Você dormiu em média "+n1(media(s))+"h nos últimos "+s.length+" check-ins"+(media(s) < 7 ? ", abaixo das 7h recomendadas." : ". Bom! Mantenha."));
+  var cs = correlSono(instancias(14)); if(cs) r.push("Nos dias com menos de 6h você cumpre "+cs.baixo+"% das tarefas, e com 6h ou mais cumpre "+cs.alto+"%.");
+  r.push("Para quem trabalha das 22h às 6h, o que mais funciona:\n• Óculos escuros na volta (6h): a luz da manhã \"acorda\" o cérebro.\n• Quarto bem escuro (blackout ou máscara), fresco e silencioso (tampão ou ventilador).\n• Cafeína só até ~2h da madrugada.\n• Sem celular 30 min antes de deitar: banho e algo leve.\n• Mesmo horário de dormir, inclusive na folga (no máximo 2h de diferença).\n• Se dormir pouco, um cochilo de 20 min antes do turno ajuda.");
+  r.push("Quer um empurrão? O desafio \"21 dias Sono do Turno\" tem tudo isso em checklist.");
+  return r.join("\n\n");
+}
+function respSemana(){
+  var L = instancias(7), p = taxa(L), r = [];
+  if(p == null) return "Ainda não tenho dados desta semana. Marque as tarefas dos desafios e os hábitos que eu monto o resumo.";
+  var L2 = instancias(14).filter(function(x){ return x.d < addDays(ymd(),-7); }), p2 = taxa(L2);
+  r.push("Últimos 7 dias: "+p+"%, "+veredito(p)+" "+vIco(p)+(p2!=null?" (semana anterior: "+p2+"%)":"")+".");
+  var gc = agrupa(L.filter(function(x){return x.cid;}), function(x){return x.cnome;});
+  Object.keys(gc).forEach(function(k){ var q = pct(gc[k].f,gc[k].t); r.push(vIco(q)+" "+k+": "+q+"%"); });
+  var ga = agrupa(L, function(x){return x.a;}), ak = Object.keys(ga).sort(function(a,b){return ga[b].f/ga[b].t - ga[a].f/ga[a].t;});
+  if(ak.length > 1) r.push("Melhor área: "+AREAS[ak[0]].nome+" ("+pct(ga[ak[0]].f,ga[ak[0]].t)+"%). Precisa de atenção: "+AREAS[ak[ak.length-1]].nome+" ("+pct(ga[ak[ak.length-1]].f,ga[ak[ak.length-1]].t)+"%).");
+  var sk = ativos().map(function(c){return c.nome+" 🔥"+chStreak(c);}); if(sk.length) r.push("Sequências: "+sk.join(" · "));
+  var e = avg(7,"energia"), h = avg(7,"humor"), s = avg(7,"sono"); if(e !== "–") r.push("Check-in: energia "+e+" · humor "+h+" · sono "+s+"h · postura "+avg(7,"postura"));
+  var top = sugestoes()[0]; if(top) r.push("Foco da próxima semana: "+top.titulo.toLowerCase()+".");
+  return r.join("\n");
+}
+var RESP = {porque:["Por que caio?",respPorQueCaio], hoje:["O que faço hoje?",respHoje], sono:["Como melhorar o sono?",respSono], semana:["Resumo da semana",respSemana]};
+
+/* --------- Relatório pro gestor --------- */
+function relatorio(){
+  var N = 14, L = instancias(N), t = ymd(), r = [];
+  r.push("📋 RELATÓRIO DA ROTINA · Gabriel · últimos "+N+" dias (até "+fmtDate(addDays(t,-1)).toLowerCase()+", "+addDays(t,-1).split("-").reverse().join("/")+")");
+  var p = taxa(L); r.push("Geral: "+(p==null?"sem dados":p+"% ("+veredito(p)+")")+" · "+L.length+" tarefas previstas");
+  var gc = agrupa(L.filter(function(x){return x.cid;}), function(x){return x.cid;});
+  r.push("\nDESAFIOS");
+  S.challenges.filter(function(c){ return c.status==="ativo" || gc[c.id]; }).forEach(function(c){
+    var g = gc[c.id], q = g ? pct(g.f,g.t) : null;
+    r.push("• "+c.nome+": dia "+Math.min(dayN(c),c.days)+"/"+c.days+(c.status!=="ativo"?" ("+c.status+")":"")+" · "+(q==null?"sem dados":q+"% "+veredito(q))+" · sequência "+chStreak(c)+" · regra: "+(c.rule==="recomecar"?"recomeça":"só quebra sequência")+(c.restarts?" · recomeços: "+c.restarts:""));
+  });
+  var ga = agrupa(L, function(x){return x.a;});
+  r.push("\nÁREAS"); Object.keys(ga).sort(function(a,b){return ga[b].f/ga[b].t-ga[a].f/ga[a].t;}).forEach(function(a){ var q = pct(ga[a].f,ga[a].t); r.push("• "+AREAS[a].nome+": "+q+"% ("+ga[a].f+"/"+ga[a].t+")"); });
+  var gt = agrupa(L, function(x){return x.k;}), tk = Object.keys(gt).sort(function(a,b){return gt[b].f/gt[b].t-gt[a].f/gt[a].t;});
+  r.push("\nTAREFAS"); tk.forEach(function(k){ var q = pct(gt[k].f,gt[k].t); r.push("• "+gt[k].items[0].label+": "+q+"% ("+gt[k].f+"/"+gt[k].t+")"); });
+  var miss = tk.filter(function(k){return gt[k].t>=3 && gt[k].f/gt[k].t<0.6;}).reverse().slice(0,3);
+  r.push("\nMAIS ESQUECIDAS: "+(miss.length ? miss.map(function(k){return gt[k].items[0].label+" ("+pct(gt[k].f,gt[k].t)+"%)";}).join("; ") : "nenhuma abaixo de 60% 👏"));
+  var nck = 0; for(var i=1;i<=N;i++) if(S.checkins[addDays(t,-i)]) nck++;
+  r.push("\nCHECK-IN ("+nck+"/"+N+" dias): energia "+avg(N,"energia")+" · humor "+avg(N,"humor")+" · sono "+avg(N,"sono")+"h · postura "+avg(N,"postura")+" (1–5)");
+  var tend = ["energia","humor","postura"].map(function(k){ var x = tendencia(k); if(!x) return null; var d = x.ult - x.ant; return k+" "+(Math.abs(d)<0.3?"estável":d>0?"subindo ↑":"caindo ↓"); }).filter(Boolean);
+  if(tend.length) r.push("Tendência (5 dias x 5 anteriores): "+tend.join(" · "));
+  var cs = correlSono(L); if(cs) r.push("Sono <6h: "+cs.baixo+"% de cumprimento x ≥6h: "+cs.alto+"%");
+  var ds = padraoSemana(instancias(30)); if(ds) r.push(ds.folga ? "Folga "+ds.pf+"% x trabalho "+ds.pt+"%" : "Melhor dia: "+ds.melhor+" ("+ds.pm+"%) · pior: "+ds.pior+" ("+ds.pp+"%)");
+  var notas = []; for(var j=0;j<N;j++){ var d = addDays(t,-j), c = S.checkins[d]; if(c && c.nota) notas.push(d.slice(8)+"/"+d.slice(5,7)+": "+c.nota); }
+  if(notas.length) r.push("\nANOTAÇÕES\n"+notas.slice(0,6).map(function(x){return "• "+x;}).join("\n"));
+  var sg = sugestoes().filter(function(s){return s.ico!=="📝";}).slice(0,3);
+  if(sg.length) r.push("\nO COACH DO APP SUGERE\n"+sg.map(function(s){return "• "+s.titulo;}).join("\n"));
+  return r.join("\n");
+}
+function mandarGestor(){
+  var txt = relatorio();
+  var copiou = function(){ toast("Relatório copiado! Cole na conversa com o Grok."); };
+  var mostra = function(){ openSheet('<h3>Relatório pro gestor</h3><p class="meta">Copie e cole na conversa:</p><textarea style="min-height:50vh;font-size:.82rem" readonly>'+esc(txt)+'</textarea>'+
+    '<div class="actions"><button type="button" class="ghost" data-act="close">Fechar</button>'+(navigator.share?'<button type="button" class="primary" data-act="shareRep">Compartilhar</button>':'')+'</div>', function(){}); };
+  (navigator.clipboard && navigator.clipboard.writeText ? navigator.clipboard.writeText(txt).then(copiou, function(){}) : Promise.resolve()).then(function(){ mostra(); });
+}
+function shareRep(){ navigator.share({title:"Relatório da rotina", text:relatorio()}).catch(function(){}); }
+/* Ações das sugestões */
+function coachLight(cid){
+  var c = chal(cid), n = dayN(c), L = instancias(14).filter(function(x){return x.cid===cid;}), g = agrupa(L, function(x){return x.k;});
+  var ativosHoje = tasksFor(c,n), ks = ativosHoje.map(function(x){return cid+":"+x.id;}).filter(function(k){return g[k];}).sort(function(a,b){return g[a].f/g[a].t-g[b].f/g[b].t;});
+  var pausar = ks.slice(0, Math.max(1, Math.min(2, ativosHoje.length-2))), nomes = [];
+  pausar.forEach(function(k){ var x = c.tasks.filter(function(y){return cid+":"+y.id===k;})[0]; if(!x) return; nomes.push(x.t);
+    if(x.on) x.on = x.on.filter(function(d){return d < n;}); else x.until = n-1; x.pausada = n; });
+  save(); toast("Versão leve ativada. Pausei: "+nomes.join(", ")); render();
+}
+function coachUp(cid, t, a){
+  var c = chal(cid), n = dayN(c); c.tasks.push({id:"t"+c.tasks.length+"u", t:t, a:a, q:"", from:n}); save(); toast("Nível acima! Nova tarefa: "+t); render();
+}
+
+/* --------- Telas --------- */
+function sugHtml(s){
+  return '<div class="bub"><div class="title">'+s.ico+' '+esc(s.titulo)+'</div>'+
+    '<div class="meta" style="color:var(--text);margin-top:6px"><b>O quê:</b> '+esc(s.oque)+'</div>'+
+    '<div class="meta" style="margin-top:4px"><b>Quando:</b> '+esc(s.quando)+'</div>'+
+    '<div class="meta" style="margin-top:4px"><b>Como:</b> '+esc(s.como)+'</div>'+
+    (s.acao?'<button class="full" style="margin-top:10px;min-height:40px" data-act="'+s.acao.act+'" data-c="'+(s.acao.c||'')+'" data-t="'+esc(s.acao.t||'')+'" data-a="'+(s.acao.a||'')+'" data-tab2="'+(s.acao.tab||'')+'">'+esc(s.acao.label)+'</button>':'')+'</div>';
+}
+function statRow(nome, p, sub){
+  return '<div class="abar"><span>'+nome+'</span><div class="bar"><i style="width:'+(p||0)+'%"></i></div><span>'+(p==null?'–':p+'%')+'</span></div>'+(sub?'<div class="meta" style="font-size:.74rem;margin:-2px 0 4px 126px">'+sub+'</div>':'');
+}
+function coachCardHoje(){
+  var L = instancias(7), p = taxa(L), s = sugestoes()[0];
+  return '<div class="card" style="border-color:rgba(46,213,115,.35)"><div class="row">'+ring((p||0)/100, p==null?'–':p+'%', '7 dias', 60)+
+    '<div class="grow"><div class="title">🤖 Coach</div><div class="meta">'+vIco(p)+' '+veredito(p)+'</div>'+(s?'<div style="font-size:.9rem;margin-top:4px">'+s.ico+' '+esc(s.titulo)+'</div>':'')+'</div></div>'+
+    '<div class="actions"><button data-tab="coach">Abrir coach</button><button class="primary" data-act="gestor">📤 Mandar pro gestor</button></div></div>';
+}
+function viewCoach(){
+  var L = instancias(coachN), p = taxa(L);
+  var h = hdr('Coach', 'Análise dos seus dados, feita aqui no celular.');
+  h += '<div class="card"><div class="seg" style="margin-top:0">'+[7,14,30].map(function(n){return '<button class="'+(coachN===n?'sel':'')+'" data-act="coachN" data-n="'+n+'">'+n+' dias</button>';}).join('')+'</div>'+
+    '<div class="row">'+ring((p||0)/100, p==null?'–':p+'%', 'geral', 76)+'<div class="grow"><div class="title" style="font-size:1.1rem">'+vIco(p)+' '+veredito(p)[0].toUpperCase()+veredito(p).slice(1)+'</div><div class="meta">'+L.filter(function(x){return x.done;}).length+' de '+L.length+' tarefas e hábitos feitos (até ontem)</div><div class="meta" style="font-size:.74rem">🟢 80%+ mandando bem · 🟡 50–79% quase lá · 🔴 &lt;50% precisa de ajuste</div></div></div>';
+  var gc = agrupa(L.filter(function(x){return x.cid;}), function(x){return x.cnome;});
+  if(Object.keys(gc).length){ h += '<h2 style="margin:16px 0 4px">Desafios</h2>'; Object.keys(gc).forEach(function(k){ var q = pct(gc[k].f,gc[k].t); h += statRow(vIco(q)+' '+esc(k), q, veredito(q)); }); }
+  var ga = agrupa(L, function(x){return x.a;});
+  if(Object.keys(ga).length){ h += '<h2 style="margin:16px 0 4px">Áreas</h2>'; Object.keys(ga).sort(function(a,b){return ga[b].f/ga[b].t-ga[a].f/ga[a].t;}).forEach(function(a){ var q = pct(ga[a].f,ga[a].t); h += statRow(AREAS[a].ico+' '+AREAS[a].nome, q); }); }
+  var gt = agrupa(L, function(x){return x.k;}), tk = Object.keys(gt).sort(function(a,b){return gt[a].f/gt[a].t-gt[b].f/gt[b].t;});
+  if(tk.length){ h += '<details style="margin-top:12px"><summary style="padding:8px 0;font-weight:600;color:var(--muted)">Por tarefa ('+tk.length+') · da mais difícil pra mais fácil</summary>'+
+    tk.map(function(k){ var q = pct(gt[k].f,gt[k].t); return statRow(vIco(q)+' '+esc(gt[k].items[0].label), q, gt[k].f+'/'+gt[k].t+' · '+veredito(q)); }).join('')+'</details>'; }
+  if(!L.length) h += '<p class="meta">Ainda sem dados. Os números aparecem a partir do dia seguinte ao início de um desafio ou hábito.</p>';
+  h += '</div>';
+  h += '<button class="full primary" data-act="gestor" style="margin:4px 0 6px">📤 Mandar pro meu gestor</button><p class="meta" style="text-align:center;margin:0 0 6px">Copia um relatório dos últimos 14 dias pra você colar na conversa com o Grok.</p>';
+  h += '<h2>Conversa com o coach</h2><div class="chatbox">';
+  var sg = sugestoes();
+  h += '<div class="bub"><div>Oi, Gabriel! Olhei seus dados. '+(sg.length?'Minhas '+sg.length+' sugestões mais importantes agora, em ordem:':'Por enquanto está tudo em dia. 👏')+'</div></div>';
+  h += sg.map(sugHtml).join('');
+  chat.forEach(function(m){ h += m.eu ? '<div class="bub eu">'+esc(m.txt)+'</div>' : '<div class="bub"><div style="white-space:pre-line">'+esc(m.txt)+'</div></div>'; });
+  h += '</div><div class="chips" style="margin-top:10px">'+Object.keys(RESP).map(function(k){return '<button class="chip" data-act="ask" data-k="'+k+'">'+RESP[k][0]+'</button>';}).join('')+'</div>';
+  return h;
+}
+
 // ---------- sheets (formulários) ----------
 var bg = document.getElementById("sheetBg"), sheet = document.getElementById("sheet");
 function openSheet(html, onSubmit){
@@ -986,6 +1297,14 @@ document.addEventListener("click", function(e){
     case "scale": var box = b.parentNode; Array.prototype.forEach.call(box.children, function(x){ x.classList.toggle("sel", x===b); }); box.nextElementSibling.value = b.dataset.n; break;
     case "wheel": wheelForm(); break;
     case "trend": trendN = +b.dataset.n; render(); break;
+    case "coachN": coachN = +b.dataset.n; render(); break;
+    case "ask": var R = RESP[b.dataset.k]; chat.push({eu:true, txt:R[0]}); chat.push({eu:false, txt:R[1]()}); if(chat.length > 12) chat = chat.slice(-12); render(); setTimeout(function(){ var bs = document.querySelectorAll(".bub"); if(bs.length) bs[bs.length-1].scrollIntoView({behavior:"smooth", block:"start"}); }, 30); break;
+    case "gestor": mandarGestor(); break;
+    case "shareRep": shareRep(); break;
+    case "coachLight": if(confirm("Pausar as tarefas mais difíceis deste desafio a partir de hoje?")) coachLight(b.dataset.c); break;
+    case "coachUp": coachUp(b.dataset.c, b.dataset.t, b.dataset.a); break;
+    case "go": tab = b.dataset.tab2; render(); window.scrollTo(0,0); break;
+    case "folga": var fo = S.cfg.folgas = S.cfg.folgas || [], fi = fo.indexOf(+b.dataset.n); if(fi>=0) fo.splice(fi,1); else fo.push(+b.dataset.n); save(); render(); break;
   }
 });
 
@@ -1000,7 +1319,7 @@ document.addEventListener("visibilitychange", function(){ if(!document.hidden &&
 
 load(); save(); lastDay = ymd(); render();
 if("serviceWorker" in navigator && location.protocol === "https:") navigator.serviceWorker.register("sw.js").catch(function(){});
-window.__rotina = {state:function(){return S;}, ymd:ymd, addDays:addDays, streak:streak, status:status, evalChallenges:evalChallenges, dayOk:dayOk, render:render};
+window.__rotina = {relatorio:function(){return relatorio();}, sugestoes:function(){return sugestoes();}, resp:function(k){return RESP[k][1]();}, state:function(){return S;}, ymd:ymd, addDays:addDays, streak:streak, status:status, evalChallenges:evalChallenges, dayOk:dayOk, render:render};
 })();
 </script>
 </body>

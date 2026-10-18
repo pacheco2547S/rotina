@@ -1,5 +1,5 @@
 // Service worker simples: rede primeiro, cache como reserva (funciona offline).
-const CACHE = 'rotina-v2';
+const CACHE = 'rotina-v3';
 const FILES = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', e => {
