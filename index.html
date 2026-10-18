@@ -3,87 +3,127 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#f4f6f5" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#121614" media="(prefers-color-scheme: dark)">
-<title>Minha Rotina</title>
+<meta name="theme-color" content="#0a0e0c">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Rotina do Gabriel</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
 <style>
 :root{
-  --bg:#f4f6f5; --card:#ffffff; --text:#1d2a24; --muted:#6b7a72; --line:#e2e8e4;
-  --accent:#3f8f6b; --accent-soft:#e3f1ea; --warn:#c7772e; --warn-soft:#fbeedd;
-  --danger:#c24a4a; --shadow:0 1px 3px rgba(0,0,0,.06);
-}
-@media (prefers-color-scheme: dark){
-  :root{ --bg:#121614; --card:#1c221f; --text:#e6ece8; --muted:#93a29a; --line:#2c3530;
-    --accent:#6cc39a; --accent-soft:#1f3a2e; --warn:#e3a35f; --warn-soft:#3a2c1c; --danger:#e57373; --shadow:none; }
+  --bg:#0a0e0c; --card:#131916; --card2:#1a221e; --text:#f2f5f3; --muted:#8a948f; --line:rgba(255,255,255,.08);
+  --accent:#2ed573; --accent-soft:rgba(46,213,115,.14); --warn:#fbbf24; --warn-soft:rgba(251,191,36,.14);
+  --danger:#ff6b6b; --danger-soft:rgba(255,107,107,.14); --grad:linear-gradient(90deg,#10b981,#2ed573 50%,#a3e635);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--bg);color:var(--text);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-main{max-width:560px;margin:0 auto;padding:16px 16px calc(96px + env(safe-area-inset-bottom))}
-h1{font-size:1.5rem;margin:4px 0 2px}
-h2{font-size:1.05rem;margin:22px 0 10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
-.sub{color:var(--muted);margin:0 0 8px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:10px;box-shadow:var(--shadow)}
+body{background:radial-gradient(120% 50% at 50% 0%,#0f2a1c 0%,var(--bg) 60%) fixed;min-height:100vh}
+main{max-width:520px;margin:0 auto;padding:16px 16px calc(110px + env(safe-area-inset-bottom))}
+.hdr{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:4px 0 10px}
+h1{font-size:1.45rem;margin:0}
+h2{font-size:.85rem;margin:24px 0 10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+.sub{color:var(--muted);margin:2px 0 8px;font-size:.92rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:14px;margin-bottom:10px}
 .row{display:flex;align-items:center;gap:12px}
 .grow{flex:1;min-width:0}
 .title{font-weight:600;word-wrap:break-word}
-.meta{color:var(--muted);font-size:.88rem}
-button{font:inherit;cursor:pointer;border:none;border-radius:12px;min-height:44px;padding:0 16px;background:var(--accent-soft);color:var(--accent);font-weight:600}
-button.primary{background:var(--accent);color:#fff}
-@media (prefers-color-scheme: dark){button.primary{color:#0f1a14}}
+.meta{color:var(--muted);font-size:.86rem}
+button{font:inherit;cursor:pointer;border:none;border-radius:14px;min-height:44px;padding:0 16px;background:var(--accent-soft);color:var(--accent);font-weight:600}
+button.primary{background:var(--accent);color:#04130b}
 button.ghost{background:transparent;color:var(--muted)}
 button.danger{background:transparent;color:var(--danger)}
-button.icon{width:44px;padding:0;font-size:1.2rem}
+button.icon{width:44px;padding:0;font-size:1.15rem}
 button.full{width:100%}
-.check{width:52px;height:52px;min-height:52px;border-radius:50%;border:2.5px solid var(--line);background:transparent;color:transparent;font-size:1.5rem;padding:0;flex:none}
-.check.on{background:var(--accent);border-color:var(--accent);color:#fff}
+button:disabled{opacity:.4}
+.gear{width:46px;height:46px;border-radius:14px;background:var(--card);border:1px solid var(--line);color:var(--text);padding:0;font-size:1.2rem;flex:none}
+.check{width:52px;height:52px;min-height:52px;border-radius:50%;border:2.5px solid rgba(255,255,255,.18);background:transparent;color:transparent;font-size:1.5rem;padding:0;flex:none}
+.check.on{background:var(--accent);border-color:var(--accent);color:#04130b}
 .check.part{border-color:var(--accent)}
-.task-check{width:34px;height:34px;min-height:34px;border-radius:10px;font-size:1.1rem}
+.task-check{width:34px;height:34px;min-height:34px;border-radius:10px;font-size:1.05rem}
 .done .title{text-decoration:line-through;color:var(--muted)}
-.bar{height:6px;border-radius:3px;background:var(--line);overflow:hidden;margin-top:6px}
-.bar i{display:block;height:100%;background:var(--accent);border-radius:3px}
+.bar{height:6px;border-radius:3px;background:var(--card2);overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;background:var(--grad);border-radius:3px}
 .dots{display:flex;gap:6px;margin-top:10px}
 .dot{flex:1;text-align:center;font-size:.7rem;color:var(--muted)}
-.dot b{display:block;width:22px;height:22px;margin:0 auto 3px;border-radius:50%;border:2px solid var(--line)}
+.dot b{display:block;width:22px;height:22px;margin:0 auto 3px;border-radius:50%;border:2px solid rgba(255,255,255,.15)}
 .dot b.on{background:var(--accent);border-color:var(--accent)}
 .dot b.part{border-color:var(--accent);background:var(--accent-soft)}
 .dot.today{color:var(--text);font-weight:700}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
-.chip{min-height:38px;padding:0 14px;border-radius:999px;background:var(--card);border:1px solid var(--line);color:var(--text);font-weight:500}
-.chip.sel{background:var(--accent);border-color:var(--accent);color:#fff}
-.tag{display:inline-block;font-size:.75rem;padding:2px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent);margin-right:6px;font-weight:600}
+.chip{min-height:38px;padding:0 14px;border-radius:999px;background:var(--card);border:1px solid var(--line);color:var(--muted);font-weight:500}
+.chip.sel{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.tag{display:inline-block;font-size:.72rem;padding:2px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent);margin-right:6px;font-weight:600}
 .tag.warn{background:var(--warn-soft);color:var(--warn)}
 .hl{border-color:var(--warn);border-width:2px}
 .empty{color:var(--muted);text-align:center;padding:16px 8px}
 .timer{font-variant-numeric:tabular-nums;font-weight:700;color:var(--accent)}
 .actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
 .actions button{flex:1}
-input,select{font:inherit;color:var(--text);background:var(--bg);border:1px solid var(--line);border-radius:12px;min-height:48px;padding:0 12px;width:100%}
-label{display:block;font-size:.88rem;color:var(--muted);margin:10px 0 4px}
+input,select,textarea{font:inherit;color:var(--text);background:var(--card2);border:1px solid var(--line);border-radius:12px;min-height:48px;padding:0 12px;width:100%;color-scheme:dark;outline:none}
+textarea{padding:10px 12px;min-height:70px;resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--accent)}
+label{display:block;font-size:.86rem;color:var(--muted);margin:10px 0 4px}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.inline{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:.95rem}
-.inline input{width:24px;min-height:24px;height:24px}
-nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:6px 4px calc(6px + env(safe-area-inset-bottom));z-index:5}
-nav button{flex:1;background:transparent;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px;min-height:56px;font-size:.72rem;font-weight:600;padding:4px 0;border-radius:12px}
-nav button span{font-size:1.35rem;line-height:1}
+.inline{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:.95rem;color:var(--text)}
+.inline input{width:24px;min-height:24px;height:24px;accent-color:var(--accent)}
+nav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom));width:min(488px,calc(100% - 24px));background:rgba(20,26,23,.94);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:24px;display:flex;padding:7px;z-index:5}
+nav button{flex:1;background:transparent;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px;min-height:54px;font-size:.7rem;font-weight:600;padding:4px 0;border-radius:16px}
+nav button span{font-size:1.3rem;line-height:1}
 nav button.act{color:var(--accent);background:var(--accent-soft)}
-.sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;z-index:10;align-items:flex-end;justify-content:center}
+.sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;z-index:10;align-items:flex-end;justify-content:center}
 .sheet-bg.open{display:flex}
-.sheet{background:var(--card);width:100%;max-width:560px;border-radius:20px 20px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom));max-height:90vh;overflow:auto}
+.sheet{background:#111714;border:1px solid var(--line);border-bottom:0;width:100%;max-width:520px;border-radius:24px 24px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom));max-height:92vh;overflow:auto}
 .sheet h3{margin:0 0 6px}
-.toast{position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--text);color:var(--bg);padding:10px 18px;border-radius:999px;font-size:.9rem;opacity:0;transition:opacity .25s;pointer-events:none;z-index:20}
+.toast{position:fixed;left:50%;bottom:calc(100px + env(safe-area-inset-bottom));transform:translateX(-50%);background:#1f2a24;border:1px solid var(--line);color:var(--text);padding:11px 18px;border-radius:14px;font-size:.9rem;opacity:0;transition:opacity .25s;pointer-events:none;z-index:20;max-width:90%;text-align:center}
 .toast.show{opacity:1}
 .big{font-size:2.2rem;font-weight:700;text-align:center;margin:10px 0}
-.streak{color:var(--warn);font-weight:700;font-size:.88rem}
+.streak{color:var(--warn);font-weight:700;font-size:.86rem}
+.seg{display:flex;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:5px;margin:8px 0 14px}
+.seg button{flex:1;background:transparent;color:var(--muted);min-height:40px;border-radius:12px}
+.seg button.sel{background:var(--accent-soft);color:var(--accent)}
+/* desafios */
+.ring{flex:none;position:relative;width:64px;height:64px}
+.ring svg{transform:rotate(-90deg)}
+.ring b{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:1.05rem;line-height:1}
+.ring b small{font-size:.62rem;color:var(--muted);font-weight:500;margin-top:2px}
+.ch-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-top:1px solid var(--line)}
+.ch-item .title{font-weight:500;font-size:.95rem}
+.ch-item.done .title{text-decoration:line-through;color:var(--muted)}
+.msg{background:var(--accent-soft);color:var(--accent);border-radius:12px;padding:9px 12px;font-size:.88rem;margin-top:10px}
+.cal{display:grid;grid-template-columns:repeat(10,1fr);gap:5px;margin-top:10px}
+.cal i{aspect-ratio:1;border-radius:7px;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:.62rem;font-style:normal;color:var(--muted)}
+.cal i.ok{background:var(--accent);color:#04130b;font-weight:700}
+.cal i.pa{background:var(--accent-soft);color:var(--accent)}
+.cal i.miss{background:var(--danger-soft);color:var(--danger)}
+.cal i.hoje{outline:2px solid var(--text)}
+.abar{display:flex;align-items:center;gap:8px;font-size:.82rem;margin-top:7px}
+.abar span:first-child{width:118px;flex:none;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.abar .bar{flex:1;margin:0}
+.abar span:last-child{width:38px;text-align:right}
+.lib .title{font-size:1.02rem}
+.lib p{margin:6px 0 0;color:var(--muted);font-size:.88rem}
+.pick{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-top:1px solid var(--line);font-size:.92rem}
+.pick input{width:22px;min-height:22px;height:22px;flex:none;margin-top:1px;accent-color:var(--accent)}
+.scale{display:flex;gap:6px}
+.scale button{flex:1;min-height:42px;padding:0;background:var(--card2);color:var(--muted)}
+.scale button.sel{background:var(--accent);color:#04130b}
+.tl{display:grid;grid-template-columns:62px 1fr;gap:6px 10px;font-size:.88rem}
+.tl b{color:var(--accent);font-variant-numeric:tabular-nums}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:.78rem;color:var(--muted);margin-top:6px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+a{color:var(--accent)}
 </style>
 </head>
 <body>
 <main id="app"></main>
 <nav id="nav">
   <button data-tab="hoje"><span>☀️</span>Hoje</button>
+  <button data-tab="desafios"><span>🏆</span>Desafios</button>
   <button data-tab="habitos"><span>🌱</span>Hábitos</button>
-  <button data-tab="tarefas"><span>✅</span>Tarefas</button>
-  <button data-tab="agenda"><span>📅</span>Agenda</button>
-  <button data-tab="ajustes"><span>⚙️</span>Ajustes</button>
+  <button data-tab="tarefas" data-also="agenda"><span>✅</span>Tarefas</button>
+  <button data-tab="evolucao"><span>📈</span>Evolução</button>
 </nav>
 <div class="sheet-bg" id="sheetBg"><div class="sheet" id="sheet"></div></div>
 <div class="toast" id="toast"></div>
@@ -91,15 +131,22 @@ nav button.act{color:var(--accent);background:var(--accent-soft)}
 <script>
 (function(){
 "use strict";
-var KEY = "rotina-gabriel-v1";
+var KEY = "rotina-gabriel-v1";          // mesma chave de sempre: os dados antigos continuam
 var CATS = ["Casa","Faculdade","Pessoal","Saúde"];
 var DIAS = ["dom","seg","ter","qua","qui","sex","sáb"];
 var MESES = ["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"];
+var MAX_ATIVOS = 3, META_DIA = 0.8;     // dia cumprido = 80% das tarefas do desafio
 
 function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
-function ymd(d){ d = d || new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+/* Dia "lógico": quem trabalha 22h–6h, o que faz de madrugada conta pro dia anterior.
+   A virada do dia é às S.cfg.virada horas (padrão 6h). ymd(data) só formata uma data. */
+function virada(){ return (S && S.cfg && typeof S.cfg.virada === "number") ? S.cfg.virada : 6; }
+function ymdRaw(d){ return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function ymd(d){ return ymdRaw(d || new Date(Date.now() - virada()*3600e3)); }
+function logicalYmd(ms){ return ymdRaw(new Date(ms - virada()*3600e3)); }
 function parse(s){ var p = s.split("-"); return new Date(+p[0], +p[1]-1, +p[2]); }
-function addDays(s,n){ var d = parse(s); d.setDate(d.getDate()+n); return ymd(d); }
+function addDays(s,n){ var d = parse(s); d.setDate(d.getDate()+n); return ymdRaw(d); }
+function diffDays(a,b){ return Math.round((parse(b) - parse(a))/864e5); }
 function esc(s){ return String(s == null ? "" : s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];}); }
 function fmtDate(s){
   if(!s) return "";
@@ -110,37 +157,57 @@ function fmtDate(s){
   return DIAS[d.getDay()] + ", " + d.getDate() + "/" + String(d.getMonth()+1).padStart(2,"0") + (d.getFullYear() !== new Date().getFullYear() ? "/"+d.getFullYear() : "");
 }
 function fmtMin(m){ m = Math.round(m); if(m < 60) return m+" min"; var h = Math.floor(m/60), r = m%60; return h+"h"+(r?String(r).padStart(2,"0"):""); }
+function curMonth(){ return ymd().slice(0,7); }
+function monthName(m){ var p = m.split("-"); return MESES[+p[1]-1] + " de " + p[0]; }
 
 function defaults(){
   return {
-    version:1,
+    version:2,
     habits:[
       {id:"med", name:"Meditação", icon:"🧘", goal:20},
       {id:"fac", name:"Faculdade / estudo", icon:"📚", goal:50},
       {id:"tai", name:"Tai Chi Chuan", icon:"☯️", goal:20}
     ],
-    logs:{}, tasks:[], events:[], timer:null
+    logs:{}, tasks:[], events:[], timer:null,
+    challenges:[], checkins:{}, wheel:{}, cfg:{virada:6}
   };
 }
-var S;
-function load(){
-  try{ var raw = localStorage.getItem(KEY); S = raw ? JSON.parse(raw) : defaults(); }catch(e){ S = defaults(); }
+var S = null;
+/* Migração: só ACRESCENTA o que falta. Nunca apaga hábitos, registros, tarefas ou compromissos. */
+function migrate(){
   var d = defaults();
-  ["habits","tasks","events"].forEach(function(k){ if(!Array.isArray(S[k])) S[k] = d[k]; });
-  if(!S.logs || typeof S.logs !== "object") S.logs = {};
+  if(!S || typeof S !== "object") S = d;
+  ["habits","tasks","events","challenges"].forEach(function(k){ if(!Array.isArray(S[k])) S[k] = d[k]; });
+  ["logs","checkins","wheel"].forEach(function(k){ if(!S[k] || typeof S[k] !== "object" || Array.isArray(S[k])) S[k] = {}; });
+  if(!S.cfg || typeof S.cfg !== "object") S.cfg = {};
+  if(typeof S.cfg.virada !== "number") S.cfg.virada = 6;
+  if(S.timer === undefined) S.timer = null;
+  S.challenges.forEach(function(c){ if(!c.log || typeof c.log !== "object") c.log = {}; if(!Array.isArray(c.tasks)) c.tasks = []; if(!c.status) c.status = "ativo"; });
+  if(!S.version || S.version < 2) S.version = 2;
 }
+function load(){
+  var raw = null;
+  try{ raw = localStorage.getItem(KEY); S = raw ? JSON.parse(raw) : defaults(); }
+  catch(e){
+    // Dado corrompido: guarda uma cópia antes de seguir, pra não perder nada
+    try{ if(raw) localStorage.setItem(KEY+"-corrompido-"+Date.now(), raw); }catch(e2){}
+    S = defaults();
+  }
+  migrate();
+}
+load.fix = migrate;
 var storageOk = true;
 function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); storageOk = true; }catch(e){ storageOk = false; toast("Não consegui salvar no aparelho. Faça um backup!"); } }
 
-// ---------- hábitos ----------
+// ---------- hábitos (igual antes) ----------
 function getLog(date, hid){ return (S.logs[date] && S.logs[date][hid]) || {min:0, done:false}; }
 function setLog(date, hid, log){ if(!S.logs[date]) S.logs[date] = {}; S.logs[date][hid] = log; }
-function liveMin(hid){ // minutos de hoje incluindo timer rodando
+function liveMin(hid){
   var m = getLog(ymd(), hid).min || 0;
   if(S.timer && S.timer.hid === hid) m += (Date.now() - S.timer.start)/60000;
   return m;
 }
-function status(date, h){ // 2 feito, 1 parcial, 0 nada
+function status(date, h){
   var l = getLog(date, h.id), m = l.min || 0;
   if(date === ymd()) m = liveMin(h.id);
   if(l.done || (h.goal > 0 && m >= h.goal)) return 2;
@@ -159,14 +226,11 @@ function toggleDone(hid){
   setLog(t, hid, l); save(); render();
 }
 function habit(id){ for(var i=0;i<S.habits.length;i++) if(S.habits[i].id===id) return S.habits[i]; return null; }
-function startTimer(hid){
-  if(S.timer) stopTimer(true);
-  S.timer = {hid:hid, start:Date.now()}; save(); render();
-}
+function startTimer(hid){ if(S.timer) stopTimer(true); S.timer = {hid:hid, start:Date.now()}; save(); render(); }
 function stopTimer(silent){
   if(!S.timer) return;
   var hid = S.timer.hid, add = (Date.now() - S.timer.start)/60000;
-  var dStart = ymd(new Date(S.timer.start)); // credita no dia em que começou
+  var dStart = logicalYmd(S.timer.start); // credita no dia em que começou
   var l = getLog(dStart, hid); l.min = Math.round(((l.min||0) + add)*10)/10; setLog(dStart, hid, l);
   S.timer = null; save();
   if(!silent){ toast("+" + fmtMin(Math.max(add,0)) + " registrados"); render(); }
@@ -178,7 +242,7 @@ function timerText(){
   return (h? h+":" : "") + String(m).padStart(2,"0") + ":" + String(x).padStart(2,"0");
 }
 
-// ---------- tarefas ----------
+// ---------- tarefas (igual antes) ----------
 function addTask(t){ S.tasks.push({id:uid(), title:t.title, date:t.date||"", cat:t.cat||"Pessoal", repeat:!!t.repeat, done:false}); save(); }
 function completeTask(id){
   var t = S.tasks.filter(function(x){return x.id===id;})[0]; if(!t) return;
@@ -193,17 +257,329 @@ function completeTask(id){
   } else toast("Tarefa concluída 👏");
   save(); render();
 }
-function sortTasks(a,b){
-  var da = a.date || "9999", db = b.date || "9999";
-  return da < db ? -1 : da > db ? 1 : a.title.localeCompare(b.title);
-}
-
-// ---------- compromissos ----------
+function sortTasks(a,b){ var da = a.date || "9999", db = b.date || "9999"; return da < db ? -1 : da > db ? 1 : a.title.localeCompare(b.title); }
 function sortEvents(a,b){ var x = a.date+" "+(a.time||"99"), y = b.date+" "+(b.time||"99"); return x<y?-1:x>y?1:0; }
 
+// ---------- desafios ----------
+function chal(id){ return S.challenges.filter(function(c){return c.id===id;})[0]; }
+function ativos(){ return S.challenges.filter(function(c){return c.status==="ativo";}); }
+function dayN(c, d){ return diffDays(c.start, d || ymd()) + 1; }
+function tasksFor(c, n){
+  return c.tasks.filter(function(x){
+    if(x.on) return x.on.indexOf(n) >= 0;
+    return (!x.from || n >= x.from) && (!x.until || n <= x.until);
+  });
+}
+function doneIds(c, d){ return c.log[d] || []; }
+function dayScore(c, d){ // {feitas, total}
+  var ts = tasksFor(c, dayN(c,d)), ids = doneIds(c,d);
+  return {feitas: ts.filter(function(x){return ids.indexOf(x.id)>=0;}).length, total: ts.length};
+}
+function dayOk(c, d){ var s = dayScore(c,d); return s.total > 0 && s.feitas >= Math.ceil(s.total*META_DIA); }
+function chStreak(c){
+  var d = ymd(), n = 0;
+  if(!dayOk(c,d)) d = addDays(d,-1);
+  while(d >= c.start && dayOk(c,d)){ n++; d = addDays(d,-1); }
+  return n;
+}
+function lastDayOf(c){ return addDays(c.start, c.days-1); }
+function chStats(c){ // dias cumpridos e % por área, até hoje (ou até o fim)
+  var end = c.status==="ativo" ? ymd() : (c.ended || lastDayOf(c)); if(end > lastDayOf(c)) end = lastDayOf(c);
+  var area = {}, ok = 0, passados = 0;
+  for(var d = c.start; d <= end; d = addDays(d,1)){
+    var ts = tasksFor(c, dayN(c,d)), ids = doneIds(c,d);
+    ts.forEach(function(x){ var a = area[x.a] || (area[x.a] = {f:0,t:0}); a.t++; if(ids.indexOf(x.id)>=0) a.f++; });
+    if(dayOk(c,d)) ok++;
+    if(d < ymd() || d === end) passados++;
+  }
+  return {area:area, ok:ok, passados:passados};
+}
+function finish(c, st){
+  c.status = st; c.ended = st==="concluido" ? lastDayOf(c) : ymd();
+  var s = chStats(c); c.result = {ok:s.ok, dias:c.days, pct:Math.round(s.ok/c.days*100)};
+}
+/* Roda ao abrir e na virada do dia: aplica a regra de recomeço e encerra desafios que terminaram */
+var avisos = [];
+function evalChallenges(){
+  var t = ymd(), mudou = false;
+  ativos().forEach(function(c){
+    var d = c.evalFrom && c.evalFrom > c.start ? c.evalFrom : c.start;
+    while(d < t){
+      if(dayN(c,d) > c.days) break;
+      if(c.rule === "recomecar" && !dayOk(c,d)){
+        c.best = Math.max(c.best||0, dayN(c,d)-1);
+        c.restarts = (c.restarts||0) + 1; c.start = t; c.log = {}; c.evalFrom = t; mudou = true;
+        avisos.push("🔁 "+c.nome+": um dia ficou incompleto, então o desafio recomeçou hoje. Recomeçar faz parte, bora de novo!");
+        return;
+      }
+      d = addDays(d,1);
+    }
+    if(c.evalFrom !== t){ c.evalFrom = t; mudou = true; }
+    if(dayN(c,t) > c.days){ finish(c,"concluido"); mudou = true; avisos.push("🏆 Você terminou o desafio "+c.nome+"! Veja o resultado em Evolução."); }
+  });
+  if(mudou) save();
+}
+function startChallenge(tpl, opts){
+  if(ativos().length >= MAX_ATIVOS){ toast("Máximo de "+MAX_ATIVOS+" desafios ao mesmo tempo. Termine ou pause um antes."); return false; }
+  var c = {id:uid(), tpl:tpl?tpl.id:null, nome:opts.nome||tpl.nome, ico:opts.ico||(tpl&&tpl.ico)||"🎯", days:opts.days||tpl.dias,
+    start:ymd(), rule:opts.rule||"sequencia", status:"ativo", log:{}, restarts:0, desc:tpl?tpl.desc:"",
+    tasks:(opts.tasks||tpl.tasks).map(function(x,i){ var o = JSON.parse(JSON.stringify(x)); o.id = "t"+i; return o; })};
+  S.challenges.push(c); save(); return c;
+}
+function toggleChTask(cid, tid){
+  var c = chal(cid); if(!c) return; var t = ymd(), was = dayOk(c,t);
+  var ids = (c.log[t] = (c.log[t] || []).slice()), i = ids.indexOf(tid);
+  if(i >= 0) ids.splice(i,1); else ids.push(tid);
+  save();
+  if(!was && dayOk(c,t)){
+    var n = dayN(c,t), m = marco(c,n);
+    toast(m || ("Dia "+n+" cumprido! 🔥 Sequência: "+chStreak(c)));
+  }
+  render();
+}
+function marco(c, n){
+  var M = {1:"Primeiro dia feito! O mais difícil é começar e você começou. 💚",
+    3:"3 dias seguidos! O hábito está pegando.",
+    7:"Uma semana completa! Agora começa a ficar mais fácil. 🔥",
+    14:"Duas semanas! Isso já é consistência de verdade.",
+    21:"21 dias! Seu cérebro já está se acostumando com essa rotina.",
+    30:"30 dias! Um mês inteiro de compromisso com você. 🏅",
+    40:"40 dias! Você foi até o fim. Isso é disciplina. 🏆"};
+  if(n === c.days) return "Último dia cumprido! Desafio "+c.nome+" completo! 🏆";
+  if(M[n]) return M[n];
+  if(n === Math.ceil(c.days/2)) return "Metade do caminho! Daqui pra frente cada dia é ladeira abaixo. 💪";
+  return "";
+}
+function motivacao(c){
+  var n = dayN(c), sk = chStreak(c), t = ymd(), s = dayScore(c,t);
+  if(dayOk(c,t)) return marco(c,n) || "Dia "+n+" cumprido! Descansa com a consciência tranquila. ✅";
+  if(sk >= 3) return "🔥 "+sk+" dias seguidos. Não deixe a sequência cair hoje!";
+  if(n > 1 && !dayOk(c, addDays(t,-1))) return "Ontem não deu? Regra de ouro: nunca falhar dois dias seguidos.";
+  if(s.feitas > 0) return "Faltam "+(Math.ceil(s.total*META_DIA)-s.feitas)+" pra cumprir o dia. Você consegue!";
+  return "Comece pela tarefa mais fácil. Começar é metade do caminho.";
+}
+/* ================== CONTEÚDO: áreas, desafios, dicas ================== */
+var AREAS = {
+  mente:     {nome:"Mente",                      ico:"🧠", cor:"#8b9cff"},
+  corpo:     {nome:"Corpo/Saúde",                ico:"💪", cor:"#2ed573"},
+  dinheiro:  {nome:"Dinheiro",                   ico:"💰", cor:"#fbbf24"},
+  carreira:  {nome:"Carreira/Renda",             ico:"🎓", cor:"#38bdf8"},
+  relacoes:  {nome:"Relacionamentos",            ico:"❤️", cor:"#fb7185"},
+  proposito: {nome:"Espiritualidade/Propósito",  ico:"✨", cor:"#c084fc"},
+  casa:      {nome:"Casa/Organização",           ico:"🏠", cor:"#a3e635"}
+};
+var AREA_KEYS = Object.keys(AREAS);
+var FIN_URL = "https://pacheco2547s.github.io/financas/";
+
+/* Cada tarefa: t = texto, a = área, q = quando (gatilho / intenção de implementação),
+   from/until = dias do desafio em que vale (progressão), on = só nesses dias, link = abrir app */
+function T(t,a,q,o){ var x = {t:t,a:a,q:q||""}; if(o) for(var k in o) x[k]=o[k]; return x; }
+
+var LIB = [
+ { id:"reset10", nome:"Reset 10 dias", ico:"🔄", dias:10, nivel:"Fácil",
+   desc:"O básico que sustenta todo o resto: sono, água, luz e movimento. Acordar sempre no mesmo horário e pegar luz natural logo ao acordar ajustam o relógio biológico, coisa muito importante pra quem trabalha à noite. Hábitos pequenos e fáceis criam a confiança pra desafios maiores.",
+   tasks:[
+     T("Acordar no horário fixo (±1h), inclusive na folga","corpo","Ao acordar (~15h30)"),
+     T("Beber 1 copo d'água logo ao acordar e chegar a ~2 L no dia","corpo","Depois de levantar"),
+     T("Caminhar 15 min ao ar livre, com luz do dia","corpo","Depois do café, antes das 18h"),
+     T("Meditar 10 min (respiração)","mente","Depois da caminhada"),
+     T("Quarto escuro e celular longe na hora de dormir","corpo","Ao chegar do turno (~6h30)")
+   ]},
+ { id:"sono21", nome:"21 dias Sono do Turno", ico:"🌙", dias:21, nivel:"Médio",
+   desc:"Feito pra quem trabalha das 22h às 6h. Escuridão total, horário fixo de dormir, cafeína só no começo do turno e óculos escuros na volta pra casa são as medidas com mais evidência pra melhorar o sono diurno de quem trabalha à noite. Dormir bem melhora humor, foco, apetite e imunidade.",
+   tasks:[
+     T("Cafeína só até as 2h da madrugada","corpo","Durante o turno"),
+     T("Óculos escuros / evitar sol forte na volta pra casa","corpo","Saindo do hotel (6h)"),
+     T("Sem tela 30 min antes de dormir (banho, leitura leve)","mente","Ao chegar em casa"),
+     T("Dormir no quarto escuro, fresco e silencioso (máscara/tampão se precisar)","corpo","~7h"),
+     T("Dormir 7h ou mais","corpo","~7h às ~14h30"),
+     T("Na folga, dormir no máximo 2h fora do horário normal","corpo","Dia de folga")
+   ]},
+ { id:"caverna40", nome:"Desafio Caverna 40 dias", ico:"🪨", dias:40, nivel:"Difícil",
+   desc:"Treino de disciplina com aumento gradual: na semana 1 só o essencial, e depois entram leitura, blocos de foco e banho frio. Ficar sem redes sociais logo ao acordar protege a atenção, e blocos de foco sem celular rendem mais que horas distraído. O banho frio tem pouca evidência pra saúde, mas serve como treino de fazer o que é desconfortável.",
+   tasks:[
+     T("Acordar no horário fixo","corpo","~15h30, despertador longe da cama"),
+     T("Sem redes sociais nas 2 primeiras horas acordado","mente","Depois de acordar até ~17h30"),
+     T("Exercício 20 min (Tai Chi, caminhada ou flexões)","corpo","Depois da meditação",{from:1}),
+     T("Ler 10 páginas","mente","Antes da faculdade",{from:8}),
+     T("2 blocos de foco de 25 min, celular em outro cômodo","carreira","Faculdade ou canal",{from:8}),
+     T("Planejar amanhã: 3 prioridades","casa","Antes de sair pro turno",{from:15}),
+     T("Banho frio (ou terminar o banho com 30 s frio)","mente","No banho depois do exercício",{from:22})
+   ]},
+ { id:"dinheiro15", nome:"15 dias Dinheiro na Mão", ico:"💰", dias:15, nivel:"Fácil",
+   desc:"Quem anota os gastos gasta menos, porque o registro mostra pra onde o dinheiro vai. Guardar um pouco todo dia cria identidade de poupador (o valor importa menos que a constância). A regra das 24h corta compras por impulso, e aprender um pouco por dia melhora as decisões.",
+   tasks:[
+     T("Registrar todo gasto no app de finanças","dinheiro","Logo depois de pagar",{link:FIN_URL}),
+     T("Guardar R$ 1 no cofrinho","dinheiro","Ao acordar, antes de abrir qualquer app",{link:FIN_URL}),
+     T("Regra das 24h: nada de compra não planejada hoje","dinheiro","Antes de qualquer compra"),
+     T("1 lição de dinheiro (5–10 min de vídeo ou texto)","dinheiro","No intervalo do turno"),
+     T("Anotar 1 ideia de renda extra","carreira","Fim de semana",{on:[7,14]})
+   ]},
+ { id:"mente21", nome:"21 dias Mente Forte", ico:"🧘", dias:21, nivel:"Médio",
+   desc:"Meditação diária de 10 a 20 min tem evidência de reduzir estresse e ansiedade. Escrever o que sente organiza os pensamentos, e anotar 3 coisas boas por dia (exercício de psicologia positiva) aumenta o bem-estar em poucas semanas. A meditação começa curta e vai aumentando.",
+   tasks:[
+     T("Meditar 10 min","mente","Depois de acordar e beber água",{until:7}),
+     T("Meditar 15 min","mente","Depois de acordar e beber água",{from:8,until:14}),
+     T("Meditar 20 min","mente","Depois de acordar e beber água",{from:15}),
+     T("Diário: escrever 5 min sobre como está","mente","Antes de dormir"),
+     T("Anotar 3 coisas boas do dia e por que aconteceram","proposito","Antes de dormir"),
+     T("Ler 10 páginas","mente","No intervalo do turno ou antes da faculdade")
+   ]},
+ { id:"corpo30", nome:"30 dias Corpo e Postura", ico:"☯️", dias:30, nivel:"Médio",
+   desc:"Tai Chi tem bons estudos pra equilíbrio, dor nas costas e estresse. Ficar muito tempo parado na mesma posição no turno pesa na coluna, então pausas curtas pra alongar e checar a postura ajudam mais que uma correção perfeita. Água e 7h de sono completam a recuperação do corpo.",
+   tasks:[
+     T("Tai Chi 15–20 min","corpo","Depois de acordar (~16h)"),
+     T("Alongar 5 min (pescoço, ombros, quadril)","corpo","Na pausa do turno"),
+     T("3 checagens de postura (alarme no celular)","corpo","22h, 1h e 4h"),
+     T("Beber ~2 L de água","corpo","Garrafa sempre à vista"),
+     T("Dormir 7h depois do turno","corpo","~7h às ~14h"),
+     T("Caminhada de 20 min","corpo","Antes da faculdade",{on:[2,4,6,9,11,13,16,18,20,23,25,27,30]})
+   ]},
+ { id:"familia30", nome:"30 dias Família", ico:"❤️", dias:30, nivel:"Fácil",
+   desc:"Relacionamentos se fortalecem com gestos pequenos e frequentes, mais do que com grandes eventos. Responder às tentativas de conexão da parceira faz muita diferença. Para crianças, 10–15 min de \"tempo especial\" em que elas escolhem a brincadeira melhoram o vínculo e o comportamento. Refeição sem celular aumenta a conversa de verdade.",
+   tasks:[
+     T("15 min só com sua filha, ela escolhe a brincadeira","relacoes","Depois de acordar, antes da faculdade"),
+     T("10 min de conversa com sua esposa, sem celular (pergunte do dia dela)","relacoes","No jantar ou antes do turno"),
+     T("Refeição sem celular na mesa","relacoes","Toda refeição em família"),
+     T("1 gesto: elogio, ajuda em algo ou mensagem carinhosa","relacoes","No intervalo do turno"),
+     T("Programa em família (passeio, filme, jogo)","relacoes","Folga",{on:[7,14,21,28]})
+   ]},
+ { id:"carreira30", nome:"30 dias Carreira e Renda", ico:"🎓", dias:30, nivel:"Médio",
+   desc:"Um bloco fixo, sempre no mesmo horário e com o celular longe, transforma o estudo em hábito, coisa que só a força de vontade não sustenta. Trabalhar um pouco no canal todo dia vence o perfeccionismo, e publicar com regularidade é o que faz canal crescer. Aprender uma habilidade com 20 min diários soma umas 10 horas no mês.",
+   tasks:[
+     T("Faculdade 50 min, celular em outro cômodo","carreira","~17h, depois do Tai Chi"),
+     T("Canal Ordem de Merlin 30 min (ideia, roteiro ou edição)","carreira","Depois da faculdade"),
+     T("Aprender 1 habilidade 20 min (edição, inglês, Excel…)","carreira","No intervalo do turno"),
+     T("Publicar ou agendar 1 vídeo","carreira","Fim da semana",{on:[7,14,21,28]}),
+     T("Revisar a semana: o que funcionou, o que mudar","carreira","Folga",{on:[7,14,21,28]})
+   ]},
+ { id:"proposito21", nome:"21 dias Propósito", ico:"✨", dias:21, nivel:"Fácil",
+   desc:"Saber o que é importante pra você dá direção às escolhas. Alguns minutos de silêncio, oração ou reflexão por dia reduzem o estresse, e atos de gentileza aumentam o bem-estar de quem faz. É pouco tempo por dia, com efeito grande no sentido da vida.",
+   tasks:[
+     T("Escolher seus 3 valores principais (ex.: família, fé, aprender)","proposito","Hoje, com calma",{on:[1]}),
+     T("5 min de silêncio, oração ou reflexão","proposito","Depois de acordar"),
+     T("1 ato de gentileza (no trabalho, em casa ou com alguém)","proposito","Durante o dia"),
+     T("Escrever 1 frase: o que fiz hoje que combina com meus valores","proposito","Antes de dormir")
+   ]},
+ { id:"casa10", nome:"10 dias Casa em Ordem", ico:"🏠", dias:10, nivel:"Fácil",
+   desc:"Arrumar em blocos curtos e cronometrados é mais fácil de começar do que uma faxina inteira. Ambiente organizado reduz estresse e decisões pequenas do dia. Deixar tudo pronto antes do turno evita correria e esquecimentos.",
+   tasks:[
+     T("10 min de arrumação com cronômetro","casa","Depois de acordar"),
+     T("Louça lavada antes de sair pro turno","casa","Depois do jantar"),
+     T("Arrumar 1 cantinho (gaveta, armário, mesa)","casa","Qualquer hora"),
+     T("Deixar roupa e mochila do trabalho prontas","casa","Antes do jantar")
+   ]},
+ { id:"vida40", nome:"40 dias Vida Completa", ico:"🌟", dias:40, nivel:"Progressivo",
+   desc:"Um pouco de cada área, ficando mais difícil aos poucos: a semana 1 é fácil e a cada semana entram hábitos novos. Começar pequeno e empilhar hábitos (\"depois de X, faço Y\") é o método com mais evidência pra mudanças que duram. No fim você terá uma rotina completa sem ter mudado tudo de uma vez.",
+   tasks:[
+     T("Beber ~2 L de água","corpo","Garrafa sempre à vista"),
+     T("Meditar 5 min","mente","Depois de beber água ao acordar",{until:14}),
+     T("Registrar os gastos do dia","dinheiro","Antes de dormir",{link:FIN_URL}),
+     T("Tai Chi ou caminhada 15 min","corpo","Depois de meditar",{from:8}),
+     T("Anotar 3 coisas boas do dia","proposito","Antes de dormir",{from:8}),
+     T("Meditar 10 min","mente","Depois de beber água ao acordar",{from:15}),
+     T("Faculdade 50 min, celular longe","carreira","~17h",{from:15}),
+     T("10 min com esposa ou filha, sem celular","relacoes","Antes do turno",{from:15}),
+     T("Ler 10 páginas","mente","No intervalo do turno",{from:22}),
+     T("Guardar R$ 1 no cofrinho","dinheiro","Ao acordar",{from:22,link:FIN_URL}),
+     T("Sem redes sociais nas 2 primeiras horas","mente","Depois de acordar",{from:29}),
+     T("Planejar amanhã: 3 prioridades","casa","Antes do turno",{from:29}),
+     T("10 min de arrumação","casa","Depois do jantar",{from:36})
+   ]}
+];
+
+/* Catálogo para desafio personalizado (tarefas extras + todas da biblioteca, sem repetir) */
+var EXTRA = [
+  T("Canal Ordem de Merlin 30 min","carreira"), T("Pegar sol 10 min ao acordar","corpo"),
+  T("Cochilo de 20 min antes do turno","corpo"), T("Lanche leve no turno (fruta, castanhas)","corpo"),
+  T("Sem doces/refrigerante hoje","corpo"), T("Revisar o saldo do banco e dos vales","dinheiro"),
+  T("Ligar ou mandar mensagem pra um amigo ou parente","relacoes"), T("Ler a Bíblia ou um texto inspirador 5 min","proposito"),
+  T("Respiração 4-6 (inspira 4 s, solta 6 s) por 2 min","mente"), T("Lavar e guardar a roupa","casa")
+];
+function catalog(){
+  var seen = {}, out = [];
+  EXTRA.concat.apply(EXTRA, LIB.map(function(c){return c.tasks;})).forEach(function(x){
+    var t = x.t.replace(/ \(.*\)$/,""); if(seen[t]) return; seen[t] = 1; out.push({t:t, a:x.a, q:x.q||"", link:x.link});
+  });
+  return out;
+}
+
+/* Dica do dia por área (gira todo dia) */
+var DICAS = {
+  mente:["Se a mente fugir na meditação, perceber e voltar à respiração É o exercício.",
+    "Celular fora do quarto: menos rolagem antes de dormir, mais sono.",
+    "Ansioso? Solte o ar mais devagar do que puxa: 4 s puxando, 6 s soltando.",
+    "Escreva a preocupação no papel e o próximo passo pequeno. Tira o peso da cabeça.",
+    "Notificações desligadas nos blocos de foco valem mais que força de vontade.",
+    "10 páginas por dia são uns 12 livros por ano."],
+  corpo:["Luz forte no começo do turno e escuridão ao dormir ajudam o relógio biológico.",
+    "Cafeína fica horas no corpo: evite depois das 2h pra dormir melhor às 7h.",
+    "Deixe a garrafa d'água à vista: o que está à vista vira hábito.",
+    "Levante e se mexa 2 min a cada hora sentado no turno.",
+    "Tai Chi devagar e bem feito vale mais que muito tempo com pressa.",
+    "Jantar pesado de madrugada atrapalha: prefira lanche leve no turno."],
+  dinheiro:["Anote o gasto na hora, porque depois a gente esquece.",
+    "Antes de comprar, pergunte: eu compraria isso se tivesse que esperar 24h?",
+    "Pague as contas fixas primeiro e depois veja quanto sobra pra gastar.",
+    "R$ 1 por dia parece pouco, mas o que vale é o hábito de guardar.",
+    "Compare o saldo do app com o do banco uma vez por semana.",
+    "Assinatura que você não usa é dinheiro saindo todo mês: revise."],
+  carreira:["Estude sempre no mesmo horário e lugar: o ambiente vira gatilho.",
+    "Feito é melhor que perfeito: publique e melhore no próximo vídeo.",
+    "Divida tarefas grandes: \"editar vídeo\" vira \"cortar a introdução\".",
+    "25 min de foco total + 5 de pausa rendem mais que 2h distraído.",
+    "Anote ideias do canal na hora que surgirem, numa lista só.",
+    "Pergunte a um colega do hotel algo que ele sabe e você não."],
+  relacoes:["Quando sua esposa puxar assunto, pare e olhe pra ela: esses momentos contam.",
+    "Diga em voz alta uma coisa que você admira nela hoje.",
+    "No tempo com sua filha, deixe ela escolher e só siga a brincadeira.",
+    "Uma mensagem carinhosa no intervalo do turno leva 30 segundos.",
+    "Discussão quente? Pause 20 min e volte com calma.",
+    "Agradeça algo específico: \"obrigado por ter feito X\"."],
+  proposito:["Antes de decidir, pergunte: isso me aproxima de quem eu quero ser?",
+    "Gratidão funciona melhor com detalhes: o que exatamente foi bom hoje?",
+    "Ajudar alguém sem esperar nada de volta aumenta seu próprio bem-estar.",
+    "5 min de silêncio por dia já fazem diferença.",
+    "Lembre por quem você trabalha a noite toda: família é propósito.",
+    "Comemore pequenas vitórias, porque elas mantêm a motivação."],
+  casa:["Regra dos 2 minutos: se leva menos de 2 min, faça agora.",
+    "Cada coisa com um lugar fixo: menos tempo procurando.",
+    "Cronômetro de 10 min tira a preguiça de começar a arrumar.",
+    "Deixe tudo do turno pronto antes do jantar.",
+    "Louça não acumula se lavar logo depois de comer.",
+    "Uma gaveta por dia é melhor que uma faxina que nunca começa."]
+};
+function dayOfYear(){ var d = parse(ymd()); return Math.floor((d - new Date(d.getFullYear(),0,0))/864e5); }
+function dica(area){ var l = DICAS[area]; return l[(dayOfYear() + AREA_KEYS.indexOf(area)) % l.length]; }
+
+/* Sugestão de dia pra quem trabalha das 22h às 6h */
+var DIA_TURNO = [
+  ["15h30","Acordar sempre no mesmo horário, beber água e pegar luz do dia"],
+  ["16h","Meditação 20–30 min"],
+  ["16h30","Tai Chi ou caminhada 15–20 min"],
+  ["17h","Faculdade 50 min (celular longe)"],
+  ["18h","Tempo com a filha e a esposa · jantar sem celular"],
+  ["19h30","Canal Ordem de Merlin ou tarefas da casa"],
+  ["20h30","Cochilo opcional de 20 min · arrumar as coisas do turno"],
+  ["22h–6h","Turno: luz forte, pausa pra alongar, cafeína só até 2h, lanche leve"],
+  ["6h","Volta com óculos escuros · banho · sem tela"],
+  ["7h","Dormir no quarto escuro e fresco, 7h ou mais"]
+];
 // ---------- UI ----------
-var tab = "hoje", taskFilter = "Todas", app = document.getElementById("app");
-function toast(msg){ var t = document.getElementById("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toast._t); toast._t = setTimeout(function(){t.classList.remove("show");}, 2200); }
+var tab = "hoje", taskFilter = "Todas", trendN = 14, app = document.getElementById("app");
+function toast(msg){ var t = document.getElementById("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toast._t); toast._t = setTimeout(function(){t.classList.remove("show");}, 3200); }
+function hdr(title, sub){
+  return '<div class="hdr"><div><h1>'+title+'</h1>'+(sub?'<p class="sub" style="margin:2px 0 0">'+sub+'</p>':'')+'</div>'+
+    '<button class="gear" data-tab="ajustes" aria-label="Ajustes">⚙️</button></div>';
+}
+function areaTag(a){ var A = AREAS[a] || AREAS.mente; return '<span class="tag" style="background:'+A.cor+'22;color:'+A.cor+'">'+A.ico+' '+A.nome+'</span>'; }
+function ring(pct, label, small, size){
+  size = size || 64; var r = size/2-5, C = 2*Math.PI*r;
+  return '<div class="ring" style="width:'+size+'px;height:'+size+'px"><svg width="'+size+'" height="'+size+'"><circle cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" fill="none" stroke="#1f2a24" stroke-width="7"/>'+
+    '<circle cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" fill="none" stroke="url(#g)" stroke-width="7" stroke-linecap="round" stroke-dasharray="'+(C*Math.min(1,pct)).toFixed(1)+' '+C.toFixed(1)+'"/>'+
+    '<defs><linearGradient id="g"><stop offset="0" stop-color="#10b981"/><stop offset="1" stop-color="#a3e635"/></linearGradient></defs></svg>'+
+    '<b>'+label+(small?'<small>'+small+'</small>':'')+'</b></div>';
+}
 
 function habitCard(h, full){
   var t = ymd(), st = status(t,h), m = liveMin(h.id), pct = st===2 ? 100 : h.goal ? Math.min(100, m/h.goal*100) : 0;
@@ -216,18 +592,14 @@ function habitCard(h, full){
     (full ? '' : (running ? '<button class="primary" data-act="stopTimer" aria-label="Pausar">⏸ <span data-timer style="margin-left:4px">'+timerText()+'</span></button>'
                           : '<button class="icon" data-act="startTimer" data-id="'+h.id+'" aria-label="Iniciar temporizador">▶</button>')) + '</div>';
   if(!full) return html + '</div>';
-  if(full){
-    html += '<div class="dots">';
-    for(var i=6;i>=0;i--){ var d = addDays(t,-i), s = status(d,h);
-      html += '<div class="dot'+(i===0?' today':'')+'"><b class="'+(s===2?'on':s===1?'part':'')+'"></b>'+DIAS[parse(d).getDay()]+'</div>'; }
-    html += '</div>';
-  }
-  html += '<div class="actions">' +
+  html += '<div class="dots">';
+  for(var i=6;i>=0;i--){ var d = addDays(t,-i), s = status(d,h);
+    html += '<div class="dot'+(i===0?' today':'')+'"><b class="'+(s===2?'on':s===1?'part':'')+'"></b>'+DIAS[parse(d).getDay()]+'</div>'; }
+  html += '</div><div class="actions">' +
     (running ? '<button class="primary" data-act="stopTimer">⏸ Pausar <span class="timer" data-timer style="color:inherit">'+timerText()+'</span></button>'
              : '<button data-act="startTimer" data-id="'+h.id+'">▶ Iniciar</button>') +
     '<button data-act="addMin" data-id="'+h.id+'">+ minutos</button>' +
-    (full?'<button class="ghost icon" data-act="editHabit" data-id="'+h.id+'" aria-label="Editar">✎</button>':'') +
-    '</div></div>';
+    '<button class="ghost icon" data-act="editHabit" data-id="'+h.id+'" aria-label="Editar">✎</button></div></div>';
   return html;
 }
 function taskCard(t){
@@ -249,11 +621,56 @@ function eventCard(e){
     '<button class="danger icon" data-act="delEvent" data-id="'+e.id+'" aria-label="Apagar">🗑</button></div></div>';
 }
 
+/* Cartão do desafio ativo: anel "dia X de N" + checklist de hoje */
+function chToday(c){
+  var t = ymd(), n = dayN(c), ts = tasksFor(c,n), ids = doneIds(c,t), sc = dayScore(c,t), sk = chStreak(c);
+  var h = '<div class="card"><div class="row">'+ring(n/c.days, n, 'de '+c.days)+
+    '<div class="grow"><div class="title">'+esc(c.ico)+' '+esc(c.nome)+'</div><div class="meta">Hoje: '+sc.feitas+'/'+sc.total+' tarefas'+
+    (sk?' · <span class="streak">🔥 '+sk+(sk===1?' dia':' dias')+'</span>':'')+'</div>'+
+    '<div class="bar"><i style="width:'+(sc.total?sc.feitas/sc.total*100:0)+'%"></i></div></div></div>';
+  ts.forEach(function(x){
+    var on = ids.indexOf(x.id) >= 0;
+    h += '<div class="ch-item'+(on?' done':'')+'"><button class="check task-check '+(on?'on':'')+'" data-act="chTask" data-c="'+c.id+'" data-id="'+x.id+'" aria-label="Marcar">✓</button>'+
+      '<div class="grow"><div class="title">'+esc(x.t)+'</div><div class="meta">'+areaTag(x.a)+(x.q?'⏰ '+esc(x.q):'')+
+      (x.link?' · <a href="'+x.link+'" target="_blank" rel="noopener">abrir app ↗</a>':'')+'</div></div></div>';
+  });
+  if(!ts.length) h += '<div class="meta" style="margin-top:8px">Nenhuma tarefa marcada pra hoje neste desafio.</div>';
+  return h + '<div class="msg">'+esc(motivacao(c))+'</div></div>';
+}
+function chFull(c){
+  var t = ymd(), st = chStats(c), cal = '<div class="cal">';
+  for(var i=1;i<=c.days;i++){
+    var d = addDays(c.start,i-1), cls = "";
+    if(d < t){ cls = dayOk(c,d) ? "ok" : dayScore(c,d).feitas ? "pa" : "miss"; }
+    else if(d === t){ cls = (dayOk(c,d) ? "ok" : dayScore(c,d).feitas ? "pa" : "") + " hoje"; }
+    cal += '<i class="'+cls+'">'+i+'</i>';
+  }
+  cal += '</div><div class="legend"><span><i style="background:var(--accent)"></i>cumprido</span><span><i style="background:var(--accent-soft)"></i>parcial</span><span><i style="background:var(--danger-soft)"></i>perdido</span></div>';
+  var areas = Object.keys(st.area).map(function(a){ var v = st.area[a], p = v.t ? Math.round(v.f/v.t*100) : 0;
+    return '<div class="abar"><span>'+AREAS[a].ico+' '+AREAS[a].nome+'</span><div class="bar"><i style="width:'+p+'%"></i></div><span>'+p+'%</span></div>'; }).join('');
+  return '<div class="card"><div class="row">'+ring(dayN(c)/c.days, dayN(c), 'de '+c.days)+'<div class="grow"><div class="title">'+esc(c.ico)+' '+esc(c.nome)+'</div>'+
+    '<div class="meta">Começou '+fmtDate(c.start)+' · '+st.ok+(st.ok===1?' dia cumprido':' dias cumpridos')+' · 🔥 '+chStreak(c)+'</div>'+
+    '<div class="meta">Regra: '+(c.rule==="recomecar"?'falhou um dia, recomeça do zero':'falhou um dia, só quebra a sequência')+(c.restarts?' · recomeços: '+c.restarts:'')+'</div></div></div>'+
+    cal+'<h2 style="margin:14px 0 4px">Por área</h2>'+areas+
+    '<div class="actions"><button data-act="chRule" data-c="'+c.id+'">Mudar regra</button><button class="danger" data-act="chQuit" data-c="'+c.id+'">Encerrar</button></div></div>';
+}
+function dicaCard(area){
+  return '<div class="card"><div class="meta" style="margin-bottom:4px">💡 Dica do dia · '+AREAS[area].ico+' '+AREAS[area].nome+'</div><div>'+esc(dica(area))+'</div></div>';
+}
+
 function viewHoje(){
-  var t = ymd(), d = new Date();
-  var feitos = S.habits.filter(function(h){return status(t,h)===2;}).length;
-  var h = '<h1>'+ (d.getHours()<12?'Bom dia':d.getHours()<18?'Boa tarde':'Boa noite') +', Gabriel</h1>' +
-    '<p class="sub">'+["Domingo","Segunda","Terça","Quarta","Quinta","Sexta","Sábado"][d.getDay()]+', '+d.getDate()+' de '+MESES[d.getMonth()]+' de '+d.getFullYear()+'</p>';
+  var t = ymd(), d = new Date(), hr = d.getHours();
+  var saud = hr>=5 && hr<12 ? 'Bom dia' : hr>=12 && hr<18 ? 'Boa tarde' : 'Boa noite';
+  var feitos = S.habits.filter(function(h){return status(t,h)===2;}).length, dd = parse(t);
+  var h = hdr(saud+', Gabriel', ["Domingo","Segunda","Terça","Quarta","Quinta","Sexta","Sábado"][dd.getDay()]+', '+dd.getDate()+' de '+MESES[dd.getMonth()]);
+  avisos.splice(0).forEach(function(m){ h += '<div class="msg" style="margin-bottom:10px">'+esc(m)+'</div>'; });
+  var ci = S.checkins[t];
+  h += ci ? '<div class="card"><div class="row"><div class="grow"><div class="title">Check-in de hoje ✔</div><div class="meta">⚡ energia '+ci.energia+' · 🙂 humor '+ci.humor+' · 😴 '+ci.sono+'h · 🧍 postura '+ci.postura+'</div></div><button class="ghost icon" data-act="checkin" aria-label="Editar check-in">✎</button></div></div>'
+          : '<button class="full primary" data-act="checkin" style="margin-bottom:10px">📝 Fazer check-in do dia (30 s)</button>';
+  h += dicaCard(AREA_KEYS[dayOfYear() % AREA_KEYS.length]);
+  var at = ativos();
+  h += '<h2>Desafios · '+at.length+'/'+MAX_ATIVOS+'</h2>' + (at.length ? at.map(chToday).join('') :
+    '<div class="card"><div class="title">Nenhum desafio ativo</div><p class="meta">Escolha um desafio pronto. Os de 10 dias são ótimos pra começar.</p><button class="full" data-tab="desafios">Ver desafios</button></div>');
   h += '<h2>Hábitos · '+feitos+'/'+S.habits.length+'</h2>';
   h += S.habits.length ? S.habits.map(function(x){return habitCard(x,false);}).join('') : '<div class="empty">Nenhum hábito. Adicione na aba Hábitos.</div>';
   var pend = S.tasks.filter(function(x){return !x.done && (!x.date || x.date <= t);}).sort(sortTasks);
@@ -265,15 +682,35 @@ function viewHoje(){
   if(prox.length) h += '<h2>Próximos</h2>' + prox.map(eventCard).join('');
   return h;
 }
+function viewDesafios(){
+  var at = ativos();
+  var h = hdr('Desafios', 'Até '+MAX_ATIVOS+' ao mesmo tempo. Um dia conta como cumprido com 80% das tarefas.');
+  h += '<h2>Ativos · '+at.length+'/'+MAX_ATIVOS+'</h2>' + (at.length ? at.map(chFull).join('') : '<div class="empty">Nenhum desafio ativo. Escolha um abaixo 👇</div>');
+  h += '<button class="full primary" data-act="chCustom" style="margin-top:6px">+ Criar meu desafio</button>';
+  h += '<h2>Biblioteca</h2>';
+  LIB.forEach(function(c){
+    var areas = {}; c.tasks.forEach(function(x){ areas[x.a] = 1; });
+    var rodando = at.some(function(a){ return a.tpl === c.id; });
+    h += '<div class="card lib"><div class="row"><div style="font-size:1.8rem">'+c.ico+'</div><div class="grow"><div class="title">'+esc(c.nome)+'</div>'+
+      '<div class="meta">'+c.dias+' dias · '+c.nivel+' · '+c.tasks.length+' tarefas</div></div></div>'+
+      '<div style="margin-top:8px">'+Object.keys(areas).map(areaTag).join('')+'</div><p>'+esc(c.desc)+'</p>'+
+      '<div class="actions"><button data-act="chView" data-id="'+c.id+'">'+(rodando?'✔ Em andamento':'Ver e começar')+'</button></div></div>';
+  });
+  h += '<h2>Dia ideal no turno da noite</h2><div class="card"><p class="meta" style="margin-top:0">Sugestão pra quem trabalha das 22h às 6h. A "manhã" é quando você acorda, por volta das 16h. Ajuste como funcionar melhor pra sua família.</p><div class="tl">'+
+    DIA_TURNO.map(function(x){ return '<b>'+x[0]+'</b><span>'+esc(x[1])+'</span>'; }).join('')+'</div></div>';
+  h += '<h2>Dicas do dia</h2><div class="card">'+AREA_KEYS.map(function(a){ return '<div class="ch-item" style="align-items:flex-start"><div style="font-size:1.2rem">'+AREAS[a].ico+'</div><div class="grow"><div class="meta">'+AREAS[a].nome+'</div><div style="font-size:.92rem">'+esc(dica(a))+'</div></div></div>'; }).join('')+'</div>';
+  return h;
+}
 function viewHabitos(){
-  return '<h1>Hábitos</h1><p class="sub">Toque no círculo para marcar como feito, ou use o temporizador para somar minutos.</p>' +
+  return hdr('Hábitos') + '<p class="sub">Toque no círculo para marcar como feito, ou use o temporizador para somar minutos.</p>' +
     S.habits.map(function(x){return habitCard(x,true);}).join('') +
     '<button class="full primary" data-act="newHabit">+ Novo hábito</button>';
 }
+function segTA(){ return '<div class="seg"><button class="'+(tab==="tarefas"?'sel':'')+'" data-tab="tarefas">✅ Tarefas</button><button class="'+(tab==="agenda"?'sel':'')+'" data-tab="agenda">📅 Agenda</button></div>'; }
 function viewTarefas(){
   var list = S.tasks.filter(function(x){return taskFilter==="Todas" || x.cat===taskFilter;});
   var open = list.filter(function(x){return !x.done;}).sort(sortTasks), done = list.filter(function(x){return x.done;});
-  var h = '<h1>Tarefas</h1><div class="actions" style="margin:10px 0 14px">' +
+  var h = hdr('Tarefas') + segTA() + '<div class="actions" style="margin:0 0 12px">' +
     '<button data-act="quick" data-title="Lavar roupa">🧺 Lavar roupa</button><button data-act="quick" data-title="Limpar a casa">🧹 Limpar a casa</button></div>' +
     '<button class="full primary" data-act="newTask">+ Nova tarefa</button><div class="chips" style="margin-top:14px">' +
     ["Todas"].concat(CATS).map(function(c){return '<button class="chip'+(c===taskFilter?' sel':'')+'" data-act="filter" data-cat="'+c+'">'+c+'</button>';}).join('') + '</div>';
@@ -284,26 +721,84 @@ function viewTarefas(){
 }
 function viewAgenda(){
   var t = ymd(), fut = S.events.filter(function(e){return e.date>=t;}).sort(sortEvents), past = S.events.filter(function(e){return e.date<t;}).sort(sortEvents).reverse();
-  var h = '<h1>Agenda</h1><p class="sub">Médico, provas, consultas e outros compromissos.</p><button class="full primary" data-act="newEvent">+ Novo compromisso</button><h2>Próximos</h2>';
+  var h = hdr('Agenda') + segTA() + '<p class="sub">Médico, provas, consultas e outros compromissos.</p><button class="full primary" data-act="newEvent">+ Novo compromisso</button><h2>Próximos</h2>';
   h += fut.length ? fut.map(eventCard).join('') : '<div class="empty">Nenhum compromisso marcado.</div>';
   if(past.length) h += '<h2>Passados</h2>' + past.slice(0,10).map(eventCard).join('');
   return h;
 }
+
+/* ---------- Evolução: roda da vida, tendências do check-in, histórico ---------- */
+function radar(cur, prev){
+  var W = 300, cx = 150, cy = 150, R = 105, n = AREA_KEYS.length, svg = '';
+  function pt(i, v){ var ang = -Math.PI/2 + i*2*Math.PI/n; return [cx + Math.cos(ang)*R*v/10, cy + Math.sin(ang)*R*v/10]; }
+  [2,4,6,8,10].forEach(function(l){ svg += '<polygon points="'+AREA_KEYS.map(function(a,i){return pt(i,l).join(',');}).join(' ')+'" fill="none" stroke="rgba(255,255,255,.08)"/>'; });
+  AREA_KEYS.forEach(function(a,i){ var p = pt(i,10), q = pt(i,12.2);
+    svg += '<line x1="'+cx+'" y1="'+cy+'" x2="'+p[0]+'" y2="'+p[1]+'" stroke="rgba(255,255,255,.08)"/>'+
+      '<text x="'+q[0]+'" y="'+q[1]+'" fill="#8a948f" font-size="11" text-anchor="middle" dominant-baseline="middle">'+AREAS[a].ico+' '+(cur&&cur[a]?cur[a]:'–')+'</text>'; });
+  function poly(d, st){ return '<polygon points="'+AREA_KEYS.map(function(a,i){return pt(i, d[a]||0).join(',');}).join(' ')+'" '+st+'/>'; }
+  if(prev) svg += poly(prev, 'fill="none" stroke="#8a948f" stroke-dasharray="4 4" stroke-width="1.5"');
+  if(cur) svg += poly(cur, 'fill="rgba(46,213,115,.22)" stroke="#2ed573" stroke-width="2"');
+  return '<svg viewBox="0 0 '+W+' '+W+'" width="100%" style="max-width:340px;display:block;margin:0 auto">'+svg+'</svg>';
+}
+function trendChart(n){
+  var days = [], t = ymd();
+  for(var i=n-1;i>=0;i--) days.push(addDays(t,-i));
+  var W = 320, H = 150, L = 22, B = 18, w = (W-L-6)/(n-1);
+  var x = function(i){ return L + i*w; }, y5 = function(v){ return 8 + (H-B-8)*(1-(v-1)/4); };
+  var svg = '';
+  [1,2,3,4,5].forEach(function(v){ svg += '<line x1="'+L+'" x2="'+(W-6)+'" y1="'+y5(v)+'" y2="'+y5(v)+'" stroke="rgba(255,255,255,.06)"/><text x="4" y="'+(y5(v)+4)+'" fill="#8a948f" font-size="10">'+v+'</text>'; });
+  // sono como barras (0–10h, mesma altura)
+  days.forEach(function(d,i){ var c = S.checkins[d]; if(c && c.sono){ var hgt = (H-B-8)*Math.min(c.sono,10)/10; svg += '<rect x="'+(x(i)-3)+'" y="'+(H-B-hgt)+'" width="6" height="'+hgt+'" rx="2" fill="rgba(139,156,255,.35)"/>'; } });
+  [["energia","#fbbf24"],["humor","#2ed573"],["postura","#fb7185"]].forEach(function(k){
+    var pts = []; days.forEach(function(d,i){ var c = S.checkins[d]; if(c && c[k[0]]) pts.push(x(i)+','+y5(c[k[0]])); });
+    if(pts.length > 1) svg += '<polyline points="'+pts.join(' ')+'" fill="none" stroke="'+k[1]+'" stroke-width="2" stroke-linejoin="round"/>';
+    pts.forEach(function(p){ var q = p.split(','); svg += '<circle cx="'+q[0]+'" cy="'+q[1]+'" r="2.5" fill="'+k[1]+'"/>'; });
+  });
+  [0, Math.floor((n-1)/2), n-1].forEach(function(i){ var d = parse(days[i]); svg += '<text x="'+x(i)+'" y="'+(H-3)+'" fill="#8a948f" font-size="10" text-anchor="middle">'+d.getDate()+'/'+(d.getMonth()+1)+'</text>'; });
+  return '<svg viewBox="0 0 '+W+' '+H+'" width="100%">'+svg+'</svg>';
+}
+function avg(n, k){ var t = ymd(), s = 0, c = 0; for(var i=0;i<n;i++){ var x = S.checkins[addDays(t,-i)]; if(x && x[k]){ s += +x[k]; c++; } } return c ? (s/c).toFixed(1).replace(".",",") : "–"; }
+function viewEvolucao(){
+  var m = curMonth(), pm = curMonth().slice(0,7), cur = S.wheel[m], prevKey = Object.keys(S.wheel).filter(function(k){return k<m;}).sort().pop();
+  var h = hdr('Evolução');
+  h += '<h2>Roda da vida · '+monthName(m)+'</h2><div class="card">' + (cur ? radar(cur, prevKey?S.wheel[prevKey]:null) +
+      '<div class="legend" style="justify-content:center"><span><i style="background:#2ed573"></i>este mês</span>'+(prevKey?'<span><i style="background:#8a948f"></i>'+monthName(prevKey)+'</span>':'')+'</div>'
+    : '<p class="meta" style="margin-top:0">Dê uma nota de 1 a 10 pra cada área da sua vida, uma vez por mês. Assim você vê o que está melhorando e onde focar o próximo desafio.</p>') +
+    '<button class="full'+(cur?'':' primary')+'" data-act="wheel" style="margin-top:10px">'+(cur?'Refazer avaliação do mês':'Avaliar minha vida agora')+'</button></div>';
+  h += '<h2>Check-in diário</h2><div class="card"><div class="seg" style="margin-top:0"><button class="'+(trendN===14?'sel':'')+'" data-act="trend" data-n="14">14 dias</button><button class="'+(trendN===30?'sel':'')+'" data-act="trend" data-n="30">30 dias</button></div>'+
+    trendChart(trendN)+'<div class="legend"><span><i style="background:#fbbf24"></i>energia '+avg(trendN,"energia")+'</span><span><i style="background:#2ed573"></i>humor '+avg(trendN,"humor")+'</span><span><i style="background:#fb7185"></i>postura '+avg(trendN,"postura")+'</span><span><i style="background:rgba(139,156,255,.5)"></i>sono '+avg(trendN,"sono")+'h</span></div>'+
+    '<p class="meta">Médias dos últimos '+trendN+' dias. Notas de 1 a 5, sono em horas.</p></div>';
+  var notas = Object.keys(S.checkins).sort().reverse().filter(function(d){return S.checkins[d].nota;}).slice(0,5);
+  if(notas.length) h += '<div class="card"><div class="title" style="margin-bottom:6px">Últimas anotações</div>'+notas.map(function(d){return '<div class="ch-item"><div class="grow"><div class="meta">'+fmtDate(d)+'</div><div style="font-size:.92rem">'+esc(S.checkins[d].nota)+'</div></div></div>';}).join('')+'</div>';
+  var hist = S.challenges.filter(function(c){return c.status!=="ativo";}).sort(function(a,b){return (b.ended||"").localeCompare(a.ended||"");});
+  h += '<h2>Histórico de desafios</h2>' + (hist.length ? hist.map(function(c){
+    var r = c.result || {ok:0,pct:0};
+    return '<div class="card"><div class="row">'+ring(r.pct/100, r.pct+'%', '', 56)+'<div class="grow"><div class="title">'+esc(c.ico)+' '+esc(c.nome)+'</div><div class="meta">'+
+      (c.status==="concluido"?'🏆 Concluído':'Encerrado')+' em '+fmtDate(c.ended)+' · '+r.ok+' de '+c.days+' dias cumpridos'+(c.restarts?' · '+c.restarts+' recomeço(s)':'')+'</div></div></div></div>';
+  }).join('') : '<div class="empty">Os desafios terminados aparecem aqui.</div>');
+  return h;
+}
 function viewAjustes(){
-  return '<h1>Ajustes</h1>' +
+  return hdr('Ajustes') +
+    '<div class="card"><div class="title">🌙 Virada do dia</div><p class="meta">Como você trabalha de madrugada, o que marcar antes desse horário conta pro dia anterior. Padrão: 6h (fim do turno).</p>'+
+    '<select id="virada">'+[0,4,5,6,7,8,9,10,12].map(function(v){return '<option value="'+v+'"'+(v===virada()?' selected':'')+'>'+(v===0?'Meia-noite (normal)':v+'h')+'</option>';}).join('')+'</select></div>' +
+    '<div class="card"><div class="title">💰 App de finanças</div><p class="meta">Saldos, gastos e cofrinho ficam no app de finanças.</p><a href="'+FIN_URL+'" target="_blank" rel="noopener"><button class="full">Abrir app de finanças ↗</button></a></div>' +
     '<div class="card"><div class="title">💾 Backup</div><p class="meta">Os dados ficam salvos só neste navegador. Se limpar o histórico ou trocar de celular, eles se perdem. Exporte um backup de vez em quando (ex.: toda semana) e guarde o arquivo.</p>' +
     '<div class="actions"><button class="primary" data-act="export">Exportar backup</button><button data-act="import">Importar backup</button></div></div>' +
-    '<div class="card"><div class="title">📊 Resumo</div><p class="meta">'+S.habits.length+' hábitos · '+S.tasks.filter(function(x){return !x.done;}).length+' tarefas pendentes · '+S.events.length+' compromissos · '+Object.keys(S.logs).length+' dias com registro</p>' +
+    '<div class="card"><div class="title">📊 Resumo</div><p class="meta">'+S.habits.length+' hábitos · '+S.tasks.filter(function(x){return !x.done;}).length+' tarefas pendentes · '+S.events.length+' compromissos · '+Object.keys(S.logs).length+' dias com registro · '+S.challenges.length+' desafios · '+Object.keys(S.checkins).length+' check-ins</p>' +
     (storageOk?'':'<p class="meta" style="color:var(--danger)">⚠️ O navegador não está salvando os dados. Use Exportar backup.</p>') + '</div>' +
-    '<div class="card"><div class="title">Apagar tudo</div><p class="meta">Volta o app ao início (hábitos padrão, sem tarefas nem compromissos).</p><button class="danger" data-act="reset">Apagar todos os dados</button></div>';
+    '<div class="card"><div class="title">📲 Instalar</div><p class="meta">No Chrome: menu ⋮ → "Adicionar à tela inicial". O app abre em tela cheia e funciona sem internet.</p></div>' +
+    '<div class="card"><div class="title">Apagar tudo</div><p class="meta">Volta o app ao início (hábitos padrão, sem tarefas, compromissos nem desafios).</p><button class="danger" data-act="reset">Apagar todos os dados</button></div>';
 }
 
 function render(){
-  var v = {hoje:viewHoje, habitos:viewHabitos, tarefas:viewTarefas, agenda:viewAgenda, ajustes:viewAjustes}[tab];
+  evalChallenges();
+  var v = {hoje:viewHoje, desafios:viewDesafios, habitos:viewHabitos, tarefas:viewTarefas, agenda:viewAgenda, evolucao:viewEvolucao, ajustes:viewAjustes}[tab] || viewHoje;
   app.innerHTML = v();
-  Array.prototype.forEach.call(document.querySelectorAll("nav button"), function(b){ b.classList.toggle("act", b.dataset.tab===tab); });
+  Array.prototype.forEach.call(document.querySelectorAll("nav button"), function(b){ b.classList.toggle("act", b.dataset.tab===tab || b.dataset.also===tab); });
+  var vi = document.getElementById("virada");
+  if(vi) vi.onchange = function(){ S.cfg.virada = +vi.value; save(); toast("Virada do dia: "+(S.cfg.virada?S.cfg.virada+"h":"meia-noite")); render(); };
 }
-
 // ---------- sheets (formulários) ----------
 var bg = document.getElementById("sheetBg"), sheet = document.getElementById("sheet");
 function openSheet(html, onSubmit){
@@ -311,10 +806,12 @@ function openSheet(html, onSubmit){
   var f = document.getElementById("f");
   f.onsubmit = function(ev){ ev.preventDefault(); if(onSubmit(f) !== false) closeSheet(); };
   var first = f.querySelector("input[autofocus]"); if(first) setTimeout(function(){first.focus();},50);
+  return f;
 }
 function closeSheet(){ bg.classList.remove("open"); sheet.innerHTML = ""; }
 bg.addEventListener("click", function(e){ if(e.target===bg) closeSheet(); });
-var formBtns = '<div class="actions"><button type="button" class="ghost" data-act="close">Cancelar</button><button type="submit" class="primary">Salvar</button></div>';
+function btns(label){ return '<div class="actions"><button type="button" class="ghost" data-act="close">Cancelar</button><button type="submit" class="primary">'+(label||'Salvar')+'</button></div>'; }
+var formBtns = btns();
 
 function taskForm(pre){
   pre = pre || {};
@@ -355,6 +852,81 @@ function minForm(id){
   function(f){ var l = getLog(ymd(),id); l.min = Math.max(0, parseFloat(f.min.value)||0); if(h.goal && l.min < h.goal) l.done = false; setLog(ymd(),id,l); save(); render(); });
 }
 
+/* ---- desafios ---- */
+var RULE_HTML = function(sel){ sel = sel || "sequencia";
+  return '<label>Regra de recomeço: se eu falhar um dia…</label>'+
+    '<label class="inline"><input type="radio" name="rule" value="sequencia"'+(sel==="sequencia"?' checked':'')+'> Só quebra a sequência 🔥 e o desafio continua (recomendado)</label>'+
+    '<label class="inline"><input type="radio" name="rule" value="recomecar"'+(sel==="recomecar"?' checked':'')+'> Recomeça do dia 1 (modo raiz)</label>'; };
+function phaseLabel(x){ if(x.on) return x.on.length===1 ? 'só no dia '+x.on[0] : 'dias '+x.on.join(', '); if(x.from && x.until) return 'dias '+x.from+'–'+x.until; if(x.from) return 'a partir do dia '+x.from; if(x.until) return 'até o dia '+x.until; return 'todo dia'; }
+function chViewForm(id){
+  var c = LIB.filter(function(x){return x.id===id;})[0], cheio = ativos().length >= MAX_ATIVOS;
+  openSheet('<h3>'+c.ico+' '+esc(c.nome)+'</h3><p class="meta">'+c.dias+' dias · '+c.nivel+'</p><p class="meta">'+esc(c.desc)+'</p>'+
+    '<label>Tarefas</label>'+c.tasks.map(function(x){ return '<div class="pick" style="display:block"><div>'+esc(x.t)+'</div><div class="meta" style="margin-top:4px">'+areaTag(x.a)+'⏰ '+esc(x.q)+' · '+phaseLabel(x)+'</div></div>'; }).join('')+
+    RULE_HTML()+ (cheio?'<p class="meta" style="color:var(--warn)">Você já tem '+MAX_ATIVOS+' desafios ativos. Encerre um pra começar outro.</p>':'')+
+    btns('Começar hoje'),
+  function(f){
+    if(cheio){ toast("Máximo de "+MAX_ATIVOS+" desafios ativos."); return false; }
+    var r = startChallenge(c, {rule:f.querySelector('input[name=rule]:checked').value});
+    if(!r) return false; toast("Desafio começou! Dia 1 de "+c.dias+" 💪"); tab = "hoje"; render(); window.scrollTo(0,0);
+  });
+}
+var custom = null;
+function customForm(){
+  if(ativos().length >= MAX_ATIVOS){ toast("Máximo de "+MAX_ATIVOS+" desafios ativos. Encerre um antes."); return; }
+  custom = custom || {nome:"", ico:"🎯", days:21, extra:[]};
+  var cat = catalog(), byArea = {};
+  cat.forEach(function(x,i){ (byArea[x.a] = byArea[x.a] || []).push('<label class="pick"><input type="checkbox" name="cat" value="'+i+'"><span>'+esc(x.t)+'</span></label>'); });
+  var f = openSheet('<h3>Criar meu desafio</h3>'+
+    '<div class="two" style="grid-template-columns:80px 1fr"><div><label>Ícone</label><input name="ico" maxlength="4" value="🎯"></div><div><label>Nome</label><input name="nome" required placeholder="Ex.: Meu recomeço"></div></div>'+
+    '<label>Duração</label><div class="chips" id="durs">'+[10,15,20,21,30,40].map(function(d){return '<button type="button" class="chip'+(d===21?' sel':'')+'" data-act="dur" data-n="'+d+'">'+d+' dias</button>';}).join('')+'</div>'+
+    '<input type="number" name="days" min="3" max="365" inputmode="numeric" value="21" placeholder="Outro número de dias">'+
+    '<label>Escolha as tarefas diárias (3 a 6 é o ideal)</label>'+
+    AREA_KEYS.map(function(a){ return byArea[a] ? '<details style="margin:6px 0"><summary style="padding:10px 0;font-weight:600">'+AREAS[a].ico+' '+AREAS[a].nome+'</summary>'+byArea[a].join('')+'</details>' : ''; }).join('')+
+    '<label>Ou escreva sua própria tarefa</label><div class="two" style="grid-template-columns:1fr 1fr"><input name="own" placeholder="Ex.: Orar 5 min"><select name="ownA">'+AREA_KEYS.map(function(a){return '<option value="'+a+'">'+AREAS[a].ico+' '+AREAS[a].nome+'</option>';}).join('')+'</select></div>'+
+    '<button type="button" class="full" data-act="addOwn" style="margin-top:8px">+ Adicionar tarefa minha</button><div id="ownList"></div>'+
+    RULE_HTML()+btns('Começar hoje'),
+  function(f){
+    var tasks = Array.prototype.map.call(f.querySelectorAll('input[name=cat]:checked'), function(el){ var x = cat[+el.value]; return {t:x.t, a:x.a, q:x.q, link:x.link}; }).concat(custom.extra);
+    var days = parseInt(f.days.value,10);
+    if(!tasks.length){ toast("Escolha pelo menos uma tarefa."); return false; }
+    if(!(days >= 3 && days <= 365)){ toast("Duração entre 3 e 365 dias."); return false; }
+    var r = startChallenge(null, {nome:f.nome.value.trim(), ico:f.ico.value.trim()||"🎯", days:days, tasks:tasks, rule:f.querySelector('input[name=rule]:checked').value});
+    if(!r) return false; custom = null; toast("Desafio criado! Dia 1 de "+days+" 💪"); tab = "hoje"; render(); window.scrollTo(0,0);
+  });
+  custom.extra = [];
+}
+function drawOwn(){ var el = document.getElementById("ownList"); if(el) el.innerHTML = custom.extra.map(function(x,i){ return '<div class="pick"><span class="grow">'+esc(x.t)+' '+areaTag(x.a)+'</span><button type="button" class="danger icon" data-act="rmOwn" data-n="'+i+'">✕</button></div>'; }).join(''); }
+function ruleForm(cid){
+  var c = chal(cid);
+  openSheet('<h3>'+esc(c.nome)+'</h3>'+RULE_HTML(c.rule)+'<p class="meta">A mudança vale a partir de amanhã. Dias que já passaram não são recontados.</p>'+formBtns,
+    function(f){ c.rule = f.querySelector('input[name=rule]:checked').value; c.evalFrom = ymd(); save(); toast("Regra atualizada"); render(); });
+}
+/* ---- check-in ---- */
+function scaleRow(name, label, val){
+  return '<label>'+label+'</label><div class="scale" data-scale="'+name+'">'+[1,2,3,4,5].map(function(n){return '<button type="button" class="'+(+val===n?'sel':'')+'" data-act="scale" data-n="'+n+'">'+n+'</button>';}).join('')+'</div><input type="hidden" name="'+name+'" value="'+(val||"")+'">';
+}
+function checkinForm(){
+  var t = ymd(), c = S.checkins[t] || {};
+  openSheet('<h3>Check-in de '+fmtDate(t).toLowerCase()+'</h3><p class="meta">1 = muito ruim · 5 = ótimo</p>'+
+    scaleRow("energia","⚡ Energia",c.energia)+scaleRow("humor","🙂 Humor",c.humor)+
+    '<label>😴 Quantas horas dormiu?</label><input type="number" name="sono" min="0" max="16" step="0.5" inputmode="decimal" value="'+(c.sono||"")+'" placeholder="Ex.: 7">'+
+    scaleRow("postura","🧍 Postura / dor nas costas (5 = sem dor)",c.postura)+
+    '<label>Anotação (opcional)</label><textarea name="nota" placeholder="Como foi o dia? O que ajudou ou atrapalhou?">'+esc(c.nota||"")+'</textarea>'+formBtns,
+  function(f){
+    var o = {energia:+f.energia.value, humor:+f.humor.value, postura:+f.postura.value, sono:parseFloat(String(f.sono.value).replace(",","."))||0, nota:f.nota.value.trim()};
+    if(!o.energia || !o.humor || !o.postura){ toast("Toque numa nota de 1 a 5 em cada item."); return false; }
+    S.checkins[t] = o; save(); toast("Check-in salvo ✔"); render();
+  });
+}
+function wheelForm(){
+  var m = curMonth(), c = S.wheel[m] || {};
+  openSheet('<h3>Roda da vida · '+monthName(m)+'</h3><p class="meta">De 1 a 10, quanto você está satisfeito com cada área hoje? Seja sincero, ninguém mais vê.</p>'+
+    AREA_KEYS.map(function(a){ var v = c[a]||5; return '<label>'+AREAS[a].ico+' '+AREAS[a].nome+': <b data-out="'+a+'">'+v+'</b></label><input type="range" name="'+a+'" min="1" max="10" value="'+v+'" style="padding:0;accent-color:#2ed573" oninput="this.previousElementSibling.querySelector(\'b\').textContent=this.value">'; }).join('')+formBtns,
+  function(f){ var o = {}; AREA_KEYS.forEach(function(a){ o[a] = +f[a].value; }); S.wheel[m] = o; save();
+    var low = AREA_KEYS.slice().sort(function(a,b){return o[a]-o[b];})[0];
+    toast("Salvo! Área com mais espaço pra crescer: "+AREAS[low].nome); render(); });
+}
+
 // ---------- backup ----------
 function doExport(){
   if(S.timer) stopTimer(true);
@@ -368,12 +940,11 @@ document.getElementById("importFile").addEventListener("change", function(){
   r.onload = function(){
     try{ var d = JSON.parse(r.result); if(!d || !Array.isArray(d.habits)) throw 0;
       if(!confirm("Substituir os dados atuais pelos do backup?")) return;
-      S = d; load.fix(); save(); toast("Backup importado ✔"); render();
+      S = d; migrate(); save(); toast("Backup importado ✔"); render();
     }catch(e){ alert("Arquivo inválido. Escolha um backup exportado por este app."); }
   };
   r.readAsText(file); this.value = "";
 });
-load.fix = function(){ var d = defaults(); ["habits","tasks","events"].forEach(function(k){ if(!Array.isArray(S[k])) S[k] = d[k]; }); if(!S.logs||typeof S.logs!=="object") S.logs = {}; };
 
 // ---------- eventos ----------
 document.addEventListener("click", function(e){
@@ -400,13 +971,26 @@ document.addEventListener("click", function(e){
     case "delEvent": if(confirm("Apagar este compromisso?")){ S.events = S.events.filter(function(x){return x.id!==id;}); save(); render(); } break;
     case "export": doExport(); break;
     case "import": document.getElementById("importFile").click(); break;
-    case "reset": if(confirm("Tem certeza? Isso apaga tudo. Faça um backup antes.")){ S = defaults(); save(); render(); } break;
+    case "reset": if(confirm("Tem certeza? Isso apaga tudo. Faça um backup antes.") && confirm("Última confirmação: apagar todos os dados?")){ S = defaults(); save(); render(); } break;
     case "close": closeSheet(); break;
+    // desafios
+    case "chTask": toggleChTask(b.dataset.c, id); break;
+    case "chView": chViewForm(id); break;
+    case "chCustom": customForm(); break;
+    case "chRule": ruleForm(b.dataset.c); break;
+    case "chQuit": var c = chal(b.dataset.c); if(c && confirm("Encerrar o desafio \""+c.nome+"\"? Ele vai pro histórico.")){ finish(c,"encerrado"); save(); toast("Desafio encerrado. Recomeçar faz parte!"); render(); } break;
+    case "dur": Array.prototype.forEach.call(document.querySelectorAll("#durs .chip"), function(x){ x.classList.toggle("sel", x===b); }); document.querySelector("#f [name=days]").value = b.dataset.n; break;
+    case "addOwn": var f = document.getElementById("f"), tx = f.own.value.trim(); if(!tx){ toast("Escreva a tarefa primeiro."); break; } custom.extra.push({t:tx, a:f.ownA.value, q:""}); f.own.value = ""; drawOwn(); break;
+    case "rmOwn": custom.extra.splice(+b.dataset.n,1); drawOwn(); break;
+    case "checkin": checkinForm(); break;
+    case "scale": var box = b.parentNode; Array.prototype.forEach.call(box.children, function(x){ x.classList.toggle("sel", x===b); }); box.nextElementSibling.value = b.dataset.n; break;
+    case "wheel": wheelForm(); break;
+    case "trend": trendN = +b.dataset.n; render(); break;
   }
 });
 
 // timer ao vivo + virada do dia
-var lastDay = ymd();
+var lastDay = null;
 setInterval(function(){
   if(S.timer){ var els = document.querySelectorAll("[data-timer]"); for(var i=0;i<els.length;i++) els[i].textContent = timerText(); }
   if(ymd() !== lastDay){ lastDay = ymd(); if(!bg.classList.contains("open")) render(); }
@@ -414,8 +998,9 @@ setInterval(function(){
 setInterval(function(){ if(S.timer && !bg.classList.contains("open")) render(); }, 30000);
 document.addEventListener("visibilitychange", function(){ if(!document.hidden && !bg.classList.contains("open")) render(); });
 
-load(); save(); render();
-window.__rotina = {state:function(){return S;}, ymd:ymd, addDays:addDays, streak:streak, status:status};
+load(); save(); lastDay = ymd(); render();
+if("serviceWorker" in navigator && location.protocol === "https:") navigator.serviceWorker.register("sw.js").catch(function(){});
+window.__rotina = {state:function(){return S;}, ymd:ymd, addDays:addDays, streak:streak, status:status, evalChallenges:evalChallenges, dayOk:dayOk, render:render};
 })();
 </script>
 </body>
